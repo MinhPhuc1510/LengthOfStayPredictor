@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/add_new_patients.css' %}">
+{% endblock %}
+
+{% block page %}
+<div class="container">
+	<h2>Add New Patient</h2>
+	<div class="form-container">
+		<form action="{% url 'create_new_patient' %}" method="POST">
+		<div class="upload-section">
+			<div class="upload-icon">
+				<i class="fas fa-camera"></i>
+			</div>
+			<!-- <a href="#" class="upload-text">Upload Photo</a> -->
+			<div class="upload-text">
+                {{ form.photo }}
+            </div>
+			
+		</div>
+			{% csrf_token %}
+			<div class="form-row">
+				<div class="form-group">
+					<label for="first_name">First Name</label>
+					<input type="text" id="first_name" name="first_name" placeholder="Enter patient's first name" required>
+				</div>
+				<div class="form-group">
+					<label for="last_name">Last Name</label>
+					<input type="text" id="last_name" name="last_name" placeholder="Enter patient's last name" required>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="dob">Date of Birth</label>
+					<input type="date" id="dob" name="date_of_birth" placeholder="Enter patient's birthdate" required>
+				</div>
+				<div class="form-group">
+					<label for="phone_number">Phone Number</label>
+					<input type="tel" id="phone_number" name="phone_number" placeholder="Enter patient's phone number" required>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="religion">Religion</label>
+					<select id="religion" name="religion" required>
+						<option value="NS">Not Specified</option>
+						<option value="CH">Christian</option>
+						<option value="IS">Islam</option>
+						<option value="JW">Jewish</option>
+						<option value="BD">Buddhist</option>
+						<option value="OT">Other</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="gender">Gender</label>
+					<select id="gender" name="gender" required>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+						<option value="O">Other</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="marital_status">Marital Status</label>
+					<select id="marital_status" name="marital_status" required>
+						<option value="S">Single</option>
+						<option value="M">Married</option>
+						<option value="SP">Separated</option>
+						<option value="W">Widowed</option>
+					</select>
+				</div>
+			</div>
+			{% if error_message %}
+                    <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+			<div class="form-actions">
+				<button type="submit" class="add-btn">Add Now</button>
+				<button type="button" class="cancel-btn">Cancel</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+
+
+
+{% block patients %}
+	<div>
+		<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;" href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+	</div>
+{% endblock %}
+
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/patients.css' %}">
+{% endblock %}
+
+
+{% block page %}
+
+<div class="container">
+    <h2>Patients List</h2>
+
+    <div class="filter-section">
+        <div class="filter-container">
+            <button class="filter-btn"><i class="fas fa-filter"></i> Filter By</button>
+            <select class="filter-select">
+                <option>Date</option>
+                <option>Order Type</option>
+                <option>Order Status</option>
+            </select>
+            <button class="reset-btn">Reset Filter</button>
+        </div>
+
+        <div class="button-container">
+            <form action="{% url 'create_new_patient' %}" method="get">
+                {% csrf_token %}
+                <button class="add-btn" type="submit">+ Add Patient</button>
+            </form>
+        </div>
+
+    </div>
+
+    <table class="patients-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Sex</th>
+                <th>DOB</th>
+                <th>Marital Status</th>
+                <th>Religion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.id }}</td>
+                <td>{{ patient }}</td>
+                <td>{{ patient.get_gender_display }}</td>
+                <td>{{ patient.date_of_birth }}</td>
+                <td>{{ patient.get_marital_status_display }}</td>
+                <td>{{ patient.get_religion_display }}</td>
+                <td>
+                    <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+{% block patients %}
+	<div>
+		<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;" href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+	</div>
+{% endblock %}
+
+
+</html>

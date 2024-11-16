@@ -1,0 +1,130 @@
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 100px;
+    border-radius:5px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.image123{
+    border-radius:50%;
+    height: 50px;
+    width: 50px;
+}
+
+/* Patient Info Section */
+/* .patient-info-container {
+    display: flex;
+    align-items: flex-start;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+} */
+
+.patient-card {
+    display: flex;
+    align-items: left;
+    gap: 10px;
+    margin-right: 10px;
+}
+
+.patient-avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    margin-left: -40px
+}
+
+.patient-details h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.patient-info p {
+    margin: 5px 0;
+}
+
+/* Admissions Section */
+.admissions-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admissions-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.back-btn,
+.add-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #fff;
+}
+
+.back-btn {
+    background-color: #007bff;
+}
+
+.add-btn {
+    background-color: #28a745;
+}
+
+.admissions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admissions-table th,
+.admissions-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.admissions-table th {
+    background: #f1f1f1;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.status.discharged {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.page-controls .page-btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+}

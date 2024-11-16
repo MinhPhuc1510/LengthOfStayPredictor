@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/patient_info.css' %}">
+{% endblock %}
+
+{% block page %}
+<div style="height: 100%;">
+    <div class="row">
+        <div class="column" style="background-color:#aaa;width: 20%;">
+            <div class="patient-card">
+                <div class="patient-avatar">
+                    <img src="{% static 'prediction_app/user.jpg' %}" alt="Patient Avatar" class="image123" />
+                </div>
+                <div class="patient-details">
+                    <h2>Rosie Todd</h2>
+                    <p>Female</p>
+                    <p>ID: 00109</p>
+                </div>
+            </div>
+        </div>
+        <div class="column" style="background-color:#bbb;width: 79%;">
+            <h2>Column 2</h2>
+            <p>Some text..</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column" style="background-color:#ccc;width: 99%;">
+            <h2>Column 3</h2>
+            <p>Some text..</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+</html>

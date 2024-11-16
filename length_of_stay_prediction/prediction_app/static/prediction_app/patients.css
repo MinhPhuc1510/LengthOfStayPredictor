@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+}
+
+.container {
+    width: 100%;
+    /* max-width: 1000px; */
+    margin: 10 20 10 20;
+    background-color: #fff;
+    /* padding: 20px; */
+
+    border-radius: 8px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-btn, .reset-btn{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+}
+
+
+.filter-btn {
+    background-color: #ccc;
+}
+
+.reset-btn {
+    background-color: #ff6666;
+}
+
+.button-container {
+    display: flex; /* Kích hoạt Flexbox */
+    justify-content: flex-end; /* Đẩy tất cả nội dung sang bên phải */
+    align-items: center; /* Căn giữa theo trục dọc (nếu cần) */
+    width: 70%; /* Đảm bảo container giãn đủ rộng */
+}
+
+.filter-container {
+    justify-content: flex-end; /* Đẩy tất cả nội dung sang bên phải */
+    align-items: center; /* Căn giữa theo trục dọc (nếu cần) */
+    width: 100%; /* Đảm bảo container giãn đủ rộng */
+}
+
+.add-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #007bff; /* Nền xanh */
+    margin-right: 0; /* Đảm bảo không có khoảng cách bên phải */
+}
+
+
+.filter-select {
+    padding: 10px;
+    font-size: 14px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.patients-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.patients-table thead {
+    background-color: #f8f9fa;
+}
+
+.patients-table th, .patients-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.patients-table th {
+    color: #666;
+    font-weight: 600;
+}
+
+.patients-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.action-btn.edit {
+    background-color: #4CAF50;
+}
+
+.action-btn.delete {
+    background-color: #f44336;
+}
+
+.action-btn i {
+    font-size: 14px;
+}
+

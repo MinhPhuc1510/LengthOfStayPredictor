@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'prediction_app/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h3>Login to Account</h3>
+            <p>Please enter your ID and password to continue</p>
+
+            <form action="{% url 'user_login' %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="id">ID</label>
+                    <input type="text" id="username" name="username" placeholder="PID123456" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+<!-- 
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember Password</label>
+                </div> -->
+                {% if error_message %}
+                    <p class="error-message">{{ error_message }}</p>
+                {% endif %}
+                <button type="submit">Sign In</button>
+           
+        </div>
+    </div>
+</body>
+</html>

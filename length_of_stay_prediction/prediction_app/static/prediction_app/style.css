@@ -1,105 +1,178 @@
-/* Basic Reset */
+
+.app-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+    color: rgb(0, 179, 255); /* or another accent color */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    top:10;left:90;position: absolute
+}
+
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: relative;
+    z-index: 1;
+    top:0;
+    left: 0;
+    background-color: white;
+    overflow-x: hidden;
+    padding-top: 20px;
+    opacity: 20;
+    padding-left: 20px;
+    align-items: center;
+  
+   /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow on the right */
+    /* font-family: 'Arial', sans-serif; */
+
+}
+
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
 }
 
-.form-image {
-    width: 100%; /* Đặt chiều rộng hình ảnh 100% để phủ kín phần header */
-    height: auto; /* Giữ tỉ lệ hình ảnh */
-    max-height: 300px; /* Giới hạn chiều cao tối đa để tránh quá lớn */
-    object-fit: cover; /* Đảm bảo hình ảnh được cắt để phù hợp với khung */
+
+.sidenav a:hover{
+    color: white;
+    background-color: #007bff; /* Màu nền xanh */
+    border-radius: 5px; /* Tùy chọn: bo góc nhẹ cho hình chữ nhật */
+    padding: 5px 10px;
+    /* font-weight: bold; */
+    text-decoration: none; 
 }
 
-/* Container Centering */
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f7f9fc;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
+.sidenav div {
+    margin-bottom: 10px; 
+    padding: 10px 15px; 
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.container {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+.title{ 
+    padding-top: 40px;           
 }
 
-h2 {
-    margin-bottom: 1.5rem;
-    color: #333;
-    font-size: 1.5rem;
+a {
+    color: black;
+    text-decoration: none;
+    /* padding-left: 20px; */
+    font-size: 17px;
+    text-align: center;        
+    
 }
-
-/* Form Styling */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-    text-align: left;
-}
-
-.result {
-    font-size: 1.5rem;  /* Increase font size */
-    font-weight: bold;  /* Make the text bold */
-    color: #007bff;  /* Set color to blue or any other color you prefer */
-    margin-top: 0.5rem;  /* Add some space above the result */
-}
-
-label {
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 0.3rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-button {
-    padding: 0.75rem;
-    background-color: #007bff;
+/* 
+h1{
     color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
+    font-size: 18px;
+    margin-left:0;
+    font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 20px;
+
+
+} */
+
+.dashboard{
+    margin-top: 100px;
+}
+
+.employee{
+    margin-top: 55px;
+}
+
+.department{
+    margin-top: 55px;
+}
+
+.main-page{
+    flex: 8;
+    height: 100%;
+    background-color: #e5e9e9ee;
+    align-items: center;
+    padding-left: 15px;
+    padding-top: 20px;
+    /* -webkit-box-shadow: 0px 0px 11px -5px #000000;  */
+    /* box-shadow: 0px 0px 11px -5px #000000; */
+    /* width: 100%; */
+}
+
+.content{
+    margin-top: 20px;
+}
+.parent{
+    height: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;       
+    /* -webkit-box-shadow: 0px 0px 11px -5px #000000; 
+    box-shadow: 0px 0px 11px -5px #000000;     */
+
+}
+.grandparent{
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    
+}
+.header{
+    height: 8%;
+    width: 100%;
+    background-color: #FFF;
+    text-align: center; 
+    align-items: center;
+    /* flex-direction: column;
+    display: flex; */
+}
+/* Vị trí và kiểu dáng icon thông báo */
+.notification-icon {
+    position: absolute;
+    top: 20px;
+    right: 150px; /* Vị trí icon ở góc trên bên phải */
+    font-size: 20px;
+    color: #6e69f9; /* Màu sắc icon */
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 1rem;
 }
 
-button:hover {
-    background-color: #0056b3;
+/* Chú thích thông báo */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 1px 4px;
+    font-weight: bold;
 }
+.image{
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 14px;
+    right: 100px;
+    border-radius:50%;
+    margin-left: 20px;
+}
+.user-name{
+    position: absolute;
+    margin-top: 10px;
+    right: 20px;
+    padding-right: 20px;
+    max-width: 60px; /* Giới hạn chiều rộng */
+    white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+    overflow: hidden; /* Ẩn phần văn bản thừa */
+    text-overflow: ellipsis; /* Hiển thị dấu ba chấm (...) */
+    font-size: 14px;
 
-/* Result Styling */
-h3 {
-    margin-top: 1.5rem;
-    color: #28a745;
+}
+.user-panel{
+    left: 95%;
+}
+.main {
+    margin-left: 160px;
+    padding: 0px 10px;
 }

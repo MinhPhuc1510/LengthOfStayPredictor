@@ -1,0 +1,75 @@
+{% load static %}
+<html>
+
+<head>
+    {% block style %}
+    <meta charset="utf-8">
+    <meta name="description" content="Final Project App">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'prediction_app/style.css' %}">
+    {% endblock %}
+    <title>
+        {% block title %} Lenght Of Stay {% endblock %}
+    </title>
+</head>
+
+<body>
+    <div class="grandparent">
+        <div class="header">
+            <div class="app-name">LoS</div>
+            
+            <div class="user-panel">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i> <!-- Icon thông báo -->
+                    <span class="notification-badge">3</span> <!-- Số thông báo -->
+                </div>
+                <img src="{% static 'prediction_app/images.png' %}" alt="Form Image" class="image">
+                <span class="user-name">{{request.user}}</span>
+                <span class="user-name" style="top: 20px; text-align: center;">{{request.user.role}}</span>
+     
+            </div>
+            
+        </div>
+        <div class="parent">
+            <div class="sidenav">
+                {% block home %}
+                <div class="Home">
+                    <a href="{% url 'get_patients' %}"> <i class="fas fa-home"></i> Home</a>
+                </div>
+                {% endblock %}
+
+                {% block patients %}
+                <div class="Patients">
+                    <a href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+                </div>
+                {% endblock %}
+                
+                {% if user.role == "admin" or user.role == "doctor"%}
+                {% block room %}
+                <div class="Room-Management">
+                    <a href="{% url 'get_patients' %}"> <i class="fas fa-hospital"></i> Room Management </a>
+                </div>
+                {% endblock %}
+
+                {% block ai %}
+                <div class="AI-Models">
+                    <a href="{% url 'get_patients' %}"> <i class="fas fa-building"></i> AI Models </a>
+                </div>
+                {% endblock %}
+                {% endif %}
+                <a href="{% url 'user_out' %}" style="left: 90px;bottom:10%;position: absolute;color: rgb(17, 16, 16);">Logout</a>
+            </div>
+            <div class="main-page">
+                {% block page %}
+                <h1>Please ask an administrator to activate your account</h1>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
