@@ -1,0 +1,75 @@
+{% extends "patient_info.html" %}
+{% load static %}
+<html>
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/admission_info.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<h2>Admissions</h2>
+<div style="background-color: white; padding: 10px; height: 30%; margin-right: 20px; margin-left: 20px;border-radius: 5px;">
+    <div class="los">
+        <label for="Los" >Lenght Of Stay:  </label>
+        <select id="Los" name="Los" value="Short-Term">
+            <option>Long-Term</option>
+            <option>Mid-Term</option>
+            <option>Short-Term</option>
+        </select>
+    </div>
+    <div class="slider-container">
+        <div class="slider-labels">
+            <span class="label left">In treatment</span>
+            <span class="label right">Discharged</span>
+        </div>
+        <input type="range" min="0" max="10" step="0.01" value="0" class="slider" id="lengthOfStay">
+        <div class="slider-status">
+            <span id="statusLabel">In treatment</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slider = document.getElementById('lengthOfStay');
+
+        function updateSliderBackground() {
+            const value = slider.value;
+            const percentage = (value/10) * 100; // Tính phần trăm dựa trên giá trị (0 đến 1)
+            slider.style.background = `linear-gradient(to right, #007bff 0%, #007bff ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+        }
+
+        // Cập nhật khi trang tải
+        updateSliderBackground();
+
+        // Cập nhật khi giá trị thay đổi
+        slider.addEventListener('input', updateSliderBackground);
+    });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const slider = document.getElementById('lengthOfStay');
+    const statusLabel = document.getElementById('statusLabel');
+
+    slider.addEventListener('input', function () {
+        if (this.value != 10) {
+            statusLabel.textContent = 'In treatment';
+            statusLabel.style.color = '#007bff';
+        } else {
+            statusLabel.textContent = 'Discharged';
+            statusLabel.style.color = '#28a745';
+        }
+    });
+});
+</script>
+
+{% endblock %}
+
+</html>

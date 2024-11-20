@@ -21,7 +21,6 @@
     <div class="grandparent">
         <div class="header">
             <div class="app-name">LoS</div>
-            
             <div class="user-panel">
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i> <!-- Icon thông báo -->
@@ -30,15 +29,14 @@
                 <img src="{% static 'prediction_app/images.png' %}" alt="Form Image" class="image">
                 <span class="user-name">{{request.user}}</span>
                 <span class="user-name" style="top: 20px; text-align: center;">{{request.user.role}}</span>
-     
+
             </div>
-            
         </div>
         <div class="parent">
             <div class="sidenav">
                 {% block home %}
                 <div class="Home">
-                    <a href="{% url 'get_patients' %}"> <i class="fas fa-home"></i> Home</a>
+                    <a href="{% url 'get_admission_info' %}"> <i class="fas fa-home"></i> Home</a>
                 </div>
                 {% endblock %}
 
@@ -47,7 +45,7 @@
                     <a href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
                 </div>
                 {% endblock %}
-                
+
                 {% if user.role == "admin" or user.role == "doctor"%}
                 {% block room %}
                 <div class="Room-Management">
@@ -61,12 +59,19 @@
                 </div>
                 {% endblock %}
                 {% endif %}
-                <a href="{% url 'user_out' %}" style="left: 90px;bottom:10%;position: absolute;color: rgb(17, 16, 16);">Logout</a>
+                <a href="{% url 'user_out' %}" style="
+                    position: relative;
+                    bottom: -50%;
+                    left: 20%;
+                    color: rgb(17, 16, 16);">Logout</a>
             </div>
             <div class="main-page">
+                {% if user.is_authenticated %}
                 {% block page %}
-                <h1>Please ask an administrator to activate your account</h1>
                 {% endblock %}
+                {% else %}
+                <h3> Please sign-in to access this page</h3>
+                {% endif %}
             </div>
         </div>
     </div>

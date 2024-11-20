@@ -18,7 +18,7 @@
     <h2>Patients List</h2>
 
     <div class="filter-section">
-        <div class="filter-container">
+        <!-- <div class="filter-container">
             <button class="filter-btn"><i class="fas fa-filter"></i> Filter By</button>
             <select class="filter-select">
                 <option>Date</option>
@@ -26,7 +26,7 @@
                 <option>Order Status</option>
             </select>
             <button class="reset-btn">Reset Filter</button>
-        </div>
+        </div> -->
 
         <div class="button-container">
             <form action="{% url 'create_new_patient' %}" method="get">
@@ -37,7 +37,7 @@
 
     </div>
 
-    <table class="patients-table">
+    <table id=patients class="patients-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -52,7 +52,7 @@
         <tbody>
             {% for patient in patients %}
             <tr>
-                <td>{{ patient.id }}</td>
+                <td><a href="{% url 'get_patient_info' patient.id %}" style="color:blue;text-decoration: underline;"> {{ patient.id }} </a> </td>        
                 <td>{{ patient }}</td>
                 <td>{{ patient.get_gender_display }}</td>
                 <td>{{ patient.date_of_birth }}</td>
@@ -66,15 +66,29 @@
             {% endfor %}
         </tbody>
     </table>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#patients').DataTable({
+                "dom": 'frtip',
+                "scrollCollapse": true,
+                Hieght: '500px',
+                scrollY: '50vh',
+            });
+        }); 
+    </script>
 </div>
 
 {% endblock %}
 
 
 {% block patients %}
-	<div>
-		<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;" href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
-	</div>
+<div>
+    <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+        href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+</div>
 {% endblock %}
 
 

@@ -11,8 +11,9 @@ body {
 
 .container {
     width: 100%;
+    /* max-height: 700px; */
     /* max-width: 1000px; */
-    margin: 10 20 10 20;
+    margin-right: 200px;
     background-color: #fff;
     /* padding: 20px; */
 
@@ -52,10 +53,10 @@ h2 {
 }
 
 .button-container {
-    display: flex; /* Kích hoạt Flexbox */
-    justify-content: flex-end; /* Đẩy tất cả nội dung sang bên phải */
-    align-items: center; /* Căn giữa theo trục dọc (nếu cần) */
-    width: 70%; /* Đảm bảo container giãn đủ rộng */
+    display: flex; 
+    /* justify-content: flex-end;  */
+    align-items: center; 
+    /* width: 70%;  */
 }
 
 .filter-container {
@@ -72,7 +73,7 @@ h2 {
     cursor: pointer;
     color: #fff;
     background-color: #007bff; /* Nền xanh */
-    margin-right: 0; /* Đảm bảo không có khoảng cách bên phải */
+    margin-right: 0;
 }
 
 
