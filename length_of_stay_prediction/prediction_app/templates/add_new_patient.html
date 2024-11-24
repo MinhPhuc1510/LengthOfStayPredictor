@@ -16,21 +16,22 @@
 	<h2>Add New Patient</h2>
 	<div class="form-container">
 		<form action="{% url 'create_new_patient' %}" method="POST">
-		<div class="upload-section">
-			<div class="upload-icon">
-				<i class="fas fa-camera"></i>
+			<div class="upload-section">
+				<div class="upload-icon">
+					<i class="fas fa-camera"></i>
+				</div>
+				<!-- <a href="#" class="upload-text">Upload Photo</a> -->
+				<div class="upload-text">
+					{{ form.photo }}
+				</div>
+
 			</div>
-			<!-- <a href="#" class="upload-text">Upload Photo</a> -->
-			<div class="upload-text">
-                {{ form.photo }}
-            </div>
-			
-		</div>
 			{% csrf_token %}
 			<div class="form-row">
 				<div class="form-group">
 					<label for="first_name">First Name</label>
-					<input type="text" id="first_name" name="first_name" placeholder="Enter patient's first name" required>
+					<input type="text" id="first_name" name="first_name" placeholder="Enter patient's first name"
+						required>
 				</div>
 				<div class="form-group">
 					<label for="last_name">Last Name</label>
@@ -45,7 +46,8 @@
 				</div>
 				<div class="form-group">
 					<label for="phone_number">Phone Number</label>
-					<input type="tel" id="phone_number" name="phone_number" placeholder="Enter patient's phone number" required>
+					<input type="tel" id="phone_number" name="phone_number" placeholder="Enter patient's phone number"
+						required>
 				</div>
 			</div>
 
@@ -87,11 +89,11 @@
 				</div>
 			</div>
 			{% if error_message %}
-                    <p class="error-message">{{ error_message }}</p>
-            {% endif %}
+			<p class="error-message">{{ error_message }}</p>
+			{% endif %}
 			<div class="form-actions">
 				<button type="submit" class="add-btn">Add Now</button>
-				<button type="button" class="cancel-btn">Cancel</button>
+				<button onclick="window.location.href='{% url 'get_patients' %}'" type="button" class="cancel-btn">Cancel</button>
 			</div>
 		</form>
 	</div>
@@ -102,9 +104,10 @@
 
 
 {% block patients %}
-	<div>
-		<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;" href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
-	</div>
+<div>
+	<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+		href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+</div>
 {% endblock %}
 
 </html>

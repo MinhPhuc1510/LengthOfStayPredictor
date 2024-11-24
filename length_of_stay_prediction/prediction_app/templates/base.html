@@ -37,7 +37,7 @@
             <div class="sidenav">
                 {% block home %}
                 <div class="Home">
-                    <a href="{% url 'add_new_admission' 1 %}"> <i class="fas fa-home"></i> Home</a>
+                    <a href="{% url 'manage_room' %}"> <i class="fas fa-home"></i> Home</a>
                 </div>
                 {% endblock %}
 
@@ -50,7 +50,7 @@
                 {% if user.role == "admin" or user.role == "doctor"%}
                 {% block room %}
                 <div class="Room-Management">
-                    <a href="{% url 'get_patients' %}"> <i class="fas fa-hospital"></i> Room Management </a>
+                    <a href="{% url 'manage_room' %}"> <i class="fas fa-hospital"></i> Room Management </a>
                 </div>
                 {% endblock %}
 

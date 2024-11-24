@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/room_management.css' %}">
+{% endblock %}
+
+{% block page %}
+<div class="room-management">
+    <h2>Room Management</h2>
+    <div class="room-grid">
+        {% for room in rooms %}
+        <div class="room-card">
+            <div class="room-header">
+                <h3 style="font-size: 1.5rem;">ROOM {{ room.number }}</h3>
+            </div>
+            <div class="room-content">
+                {% if room.patient_set.count != 0 %}
+                <div class="room-placeholder">
+                    <img src="{% static 'prediction_app/room-1.jpg' %}" alt="Room Icon" class="room-icon">
+                </div>
+                {% else %}
+                <div class="room-placeholder">
+                    <img src="{% static 'prediction_app/room-2.jpg' %}" alt="Room Icon" class="room-icon">
+                </div>
+                {% endif %}
+                <div class="room-details">
+                    {% for patient in room.patient_set.all %}
+                    <div class="row">
+                        <p class="col-8">{{ patient }}</p>
+                        <div class='circle' data-progress="50" style="--progress: 180deg;">50%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+</html>

@@ -79,6 +79,9 @@ class User(AbstractBaseUser):
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
+class Room(models.Model):
+    status = models.CharField(max_length=10, null=True, blank=True)
+    number = models.IntegerField()
 
 class Patient(models.Model):
     GENDER_CHOICES = [
@@ -128,6 +131,7 @@ class Patient(models.Model):
         default='other'
     )
     photo = models.ImageField(upload_to='patient_photos/', blank=True, null=True)
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
