@@ -19,11 +19,15 @@
     z-index: 1;
     background-color: white;
     overflow-x: hidden;
+    padding-top: 4rem;
     /* padding-top: 60px; */
     opacity: 20;
     padding-left: 5px;
-    align-items: center;
-    margin-top: 3%;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+
+    /* margin-top: 3%; */
     /* margin-right: 20px; */
   
    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow on the right */

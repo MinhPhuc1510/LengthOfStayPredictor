@@ -37,7 +37,7 @@
             <div class="sidenav">
                 {% block home %}
                 <div class="Home">
-                    <a href="{% url 'manage_room' %}"> <i class="fas fa-home"></i> Home</a>
+                    <a href="{% url 'home' %}"> <i class="fas fa-home"></i> Home</a>
                 </div>
                 {% endblock %}
 
@@ -60,11 +60,23 @@
                 </div>
                 {% endblock %}
                 {% endif %}
+                {% if user.is_authenticated %}
                 <a href="{% url 'user_out' %}" style="
                     position: relative;
-                    bottom: -50%;
-                    left: 20%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top: auto;
+                    margin-bottom: 4rem;
                     color: rgb(17, 16, 16);">Logout</a>
+                {% else %}
+                <a href="{% url 'user_login' %}" style="
+                    position: relative;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top: auto;
+                    margin-bottom: 4rem;
+                    color: rgb(17, 16, 16);">Login</a>
+                {% endif %}
             </div>
             <div class="main-page">
                 {% if user.is_authenticated %}

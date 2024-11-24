@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/home.css' %}">
+{% endblock %}
+
+{% block page %}
+
+<section class="about" id="about">
+    <div class="container">
+        <h2>About LOS</h2>
+        <p>
+            LOS (Length of Stay) is a cutting-edge platform designed to help hospitals and clinics efficiently
+            manage patient admissions, predict length of stay, and enhance overall operational efficiency.
+        </p>
+    </div>
+</section>
+
+<section class="features" id="features">
+    <div class="container">
+        <h2>Features</h2>
+        <div class="feature-list">
+            <div class="feature">
+                <h3>Accurate Predictions</h3>
+                <p>Leverage advanced algorithms to predict patient length of stay with high accuracy.</p>
+            </div>
+            <div class="feature">
+                <h3>Real-Time Monitoring</h3>
+                <p>Monitor patient admissions and updates in real-time with an intuitive dashboard.</p>
+            </div>
+            <div class="feature">
+                <h3>Data-Driven Insights</h3>
+                <p>Analyze historical data to improve hospital resource allocation and planning.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block home %}
+<div>
+    <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+        href="{% url 'home' %}"> <i class="fas fa-home"></i> Home</a>
+</div>
+{% endblock %}
+
+</html>

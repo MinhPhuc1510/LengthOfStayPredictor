@@ -119,4 +119,11 @@
 </div>
 {% endblock %}
 
+{% block patients %}
+<div>
+    <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+        href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+</div>
+{% endblock %}
+
 </html>
