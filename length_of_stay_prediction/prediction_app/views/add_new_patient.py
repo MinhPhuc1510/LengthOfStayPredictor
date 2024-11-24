@@ -2,6 +2,8 @@ from django.shortcuts import render
 from prediction_app.forms import AddNewPatientForm
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib import messages
+
 
 import logging
 from datetime import datetime
@@ -26,6 +28,7 @@ def create_patient(request):
         if form.is_valid():
             try:
                 form.save()
+                messages.success(request, 'Created Patient Successfully!')
             except:
                 logging.error('Error saving')
                 return render(request, 'add_new_patient.html', {'error_message': 'Error saving'})

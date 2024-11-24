@@ -13,90 +13,89 @@
 
 {% block page %}
 <div class="container">
-	<h2>Add New Patient</h2>
+	<h2>Patient Admission Request</h2>
 	<div class="form-container">
-		<form action="{% url 'create_new_patient' %}" method="POST">
-		<div class="upload-section">
-			<div class="upload-icon">
-				<i class="fas fa-camera"></i>
-			</div>
-			<!-- <a href="#" class="upload-text">Upload Photo</a> -->
-			<div class="upload-text">
-                {{ form.photo }}
-            </div>
-			
-		</div>
+		<form action="{% url 'add_new_admission' patient.id %}" method="POST">
 			{% csrf_token %}
-			<div class="form-row">
-				<div class="form-group">
-					<label for="first_name">First Name</label>
-					<input type="text" id="first_name" name="first_name" placeholder="Enter patient's first name" required>
+			<div class="row">
+				<div class="col-4">
+					<label for="PID">PID</label>
+					<input style="width: 100%;" type="text" id="PID" name="id" value="{{ patient.id }}" disabled>
 				</div>
-				<div class="form-group">
-					<label for="last_name">Last Name</label>
-					<input type="text" id="last_name" name="last_name" placeholder="Enter patient's last name" required>
+				<div class="col-2">
+					<label for="gender">Gender</label>
+					<input style="width: 100%;" id="gender" name="gender" value="{{ patient.get_gender_display }}" disabled>
 				</div>
-				<div class="form-group">
-					<label for="last_name">Last Name</label>
-					<input type="text" id="last_name" name="last_name" placeholder="Enter patient's last name" required>
+				<div class="col-2">
+					<label for="age">Age</label>
+					<input style="width: 80%;" type="text" id="age" name="age" value="{{ patient.age }}" disabled>
+				</div>
+				<div class="col-4">
+					<label for="marital_status">Marital Status</label>
+					<input style="width: 100%;" id="marital_status" name="marital_status" value="{{ patient.get_marital_status_display }}" disabled>
+						
 				</div>
 			</div>
 
-			<div class="form-row">
-				<div class="form-group">
+			<div class="row">
+				<div class="col-4">
+					<label for="name">Name</label>
+					<input type="text" id="name" name="name" value="{{ patient }}" disabled>
+				</div>
+				<div class="col-4">
 					<label for="dob">Date of Birth</label>
-					<input type="date" id="dob" name="date_of_birth" placeholder="Enter patient's birthdate" required>
+					<input type="text" id="dob" name="date_of_birth" placeholder="Enter patient's birthdate" value="{{ patient.date_of_birth }}" disabled>
 				</div>
-				<div class="form-group">
-					<label for="phone_number">Phone Number</label>
-					<input type="tel" id="phone_number" name="phone_number" placeholder="Enter patient's phone number" required>
+				<div class="col-4">
+					<label for="religion">Religion</label>
+					<input style="width: 100%;" id="religion" name="religion" value="{{ patient.get_religion_display }}" disabled>	
 				</div>
 			</div>
 
-			<div class="form-row">
-				<div class="form-group">
-					<label for="religion">Religion</label>
-					<select id="religion" name="religion" required>
-						<option value="NS">Not Specified</option>
-						<option value="CH">Christian</option>
-						<option value="IS">Islam</option>
-						<option value="JW">Jewish</option>
-						<option value="BD">Buddhist</option>
+			<div class="row">
+				<div class="col-4">
+					<label for="Address">Address</label>
+					<input type="text" id="Address" name="Address" value="{{ patient.address }}" disabled>
+				</div>
+				<div class="col-4">
+					<label for="phone_number">Phone Number</label>
+					<input type="tel" id="phone_number" name="phone_number" value="{{ patient.phone_number }}"
+					disabled>
+				</div>
+				<div class="col-4">
+					<label for="type">Type</label>
+					<select id="type" name="type" required>
+						<option value="E">Emergency</option>
+						<option value="U">Urgent</option>
+						<option value="EL">Elective</option>
 						<option value="OT">Other</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<label for="gender">Gender</label>
-					<select id="gender" name="gender" required>
-						<option value="M">Male</option>
-						<option value="F">Female</option>
-						<option value="O">Other</option>
-					</select>
-				</div>
 			</div>
 
-			<div class="form-row">
-				<div class="form-group">
-					<label for="marital_status">Marital Status</label>
-					<select id="marital_status" name="marital_status" required>
-						<option value="S">Single</option>
-						<option value="M">Married</option>
-						<option value="SP">Separated</option>
-						<option value="W">Widowed</option>
-					</select>
+			<div class="row">
+				<div class="col-4">
+					<label for="diagnose">Diagnose</label>
+					<input type="text" id="diagnose" name="diagnose" placeholder="Enter patient's diagnose" required>
 				</div>
-				<div class="form-group">
-					<label for="address">Address</label>
-					<input type="text" id="address" name="address" placeholder="Enter patient's address">
+				<div class="col-4">
+					<label for="icd-code">ICD-Code</label>
+					<input type="text" id="icd-code" name="icd_code" placeholder="Enter patient's icd-code" required>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<label for="clinical_note">Clinical Note</label>
+					<textarea class="note-box" name="clinical_note" placeholder="Enter patient's clinical note"></textarea>
 				</div>
 			</div>
 			{% if error_message %}
-                    <p class="error-message">{{ error_message }}</p>
-            {% endif %}
-			<div class="form-actions">
-				<button type="submit" class="add-btn">Add Now</button>
-				<button type="button" class="cancel-btn">Cancel</button>
-			</div>
+			<p class="error-message">{{ error_message }}</p>
+			{% endif %}
+
+			<button style="display: block;margin-left: auto;margin-right: auto;" type="submit"
+				class="btn btn-primary">Requesst Admission</button>
+
 		</form>
 	</div>
 </div>
@@ -106,9 +105,10 @@
 
 
 {% block patients %}
-	<div>
-		<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;" href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
-	</div>
+<div>
+	<a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+		href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
+</div>
 {% endblock %}
 
 </html>

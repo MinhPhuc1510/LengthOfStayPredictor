@@ -1,9 +1,14 @@
 from django import forms
-from .models import Patient
+from .models import Patient, Admission
 
 class AddNewPatientForm(forms.ModelForm):
     class Meta:
         model= Patient
+        fields = '__all__'
+
+class AddNewAdmission(forms.ModelForm):
+    class Meta:
+        model= Admission
         fields = '__all__'
 
 

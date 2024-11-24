@@ -11,29 +11,30 @@
 {% endblock %}
 
 {% block page %}
-<div style="max-height: 500px;">
+<div>
     <h2>Patients Infor</h2>
     <div class="row">
-        <div class="column" style="background-color: white;width: 15%;height: 200px; margin-left: 30px;">
+        <div class="column" style="background-color: white;width: 15%; margin-left: 30px;padding: 2rem">
             <div class="patient-card">
                 <div class="patient-avatar">
                     <img src="{% static 'prediction_app/user.jpg' %}" alt="Patient Avatar" class="image123" />
                 </div>
-                <div class="patient-details">
+                <div class="patient-details" style="text-align: center;">
                     <h2>{{ patient }}</h2>
-                    <p style="margin-left: -20px;margin-bottom: 0px;">{{ patient.get_gender_display }}</p>
-                    <p style="margin-left: -20px;">ID: {{ patient.id }}</p>
+                    <p style="margin-bottom: 0;">{{ patient.get_gender_display }}</p>
+                    <p>ID: {{ patient.id }}</p>
                 </div>
             </div>
         </div>
-        <div class="column" style="background-color: white;width: 70%;height: 258px;padding: 5%; margin-left: 30px;">
+
+        <div class="column" style="background-color: white;width: 75%; padding: 2rem; margin-left: 30px;">
             <div class="info-row">
                 <div class="info-item">
                     <strong>Date of Birth:</strong> {{ patient.date_of_birth }}
                 </div>
-                <div class="info-item">
+                <!-- <div class="info-item">
                     <strong>Clinical Note:</strong> {{ patient.clinical_note }}
-                </div>
+                </div> -->
             </div>
             <div class="info-row">
                 <div class="info-item">
@@ -51,41 +52,56 @@
                 </div>
             </div>
         </div>
+        {% block addmission %}
+
+        {% endblock %}
     </div>
     {% block content %}
-    <h2>Admissions</h2>
-    <div style="background-color: white; padding: 10px; height: 49%; margin-right: 20px; margin-left: 20px;">
-        <table id=patients class="patients-table" , style="background-color: white;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Sex</th>
-                    <th>DOB</th>
-                    <th>Marital Status</th>
-                    <th>Religion</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for patient in patients %}
-                <tr>
-                    <td><a href="{% url 'get_patient_info' patient.id %}"
-                            style="color:blue;text-decoration: underline;"> {{ patient.id }} </a> </td>
-                    <td>{{ patient }}</td>
-                    <td>{{ patient.get_gender_display }}</td>
-                    <td>{{ patient.date_of_birth }}</td>
-                    <td>{{ patient.get_marital_status_display }}</td>
-                    <td>{{ patient.get_religion_display }}</td>
-                    <td>
-                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div style="margin-bottom: 1.5rem;" class="row">
+        <h2 style="margin-right: 2rem;">Admissions</h2>
+        <form action="{% url 'get_patients' %}" method="get">
+            {% csrf_token %}
+            <button style="background-color: #007bff;" class="add-btn" type="submit"> Back to List</button>
+        </form>
+        <form style="margin-right: 3rem;" class="ml-auto" action="{% url 'add_new_admission' patient.id %}"
+            method="get">
+            {% csrf_token %}
+            <button style="background-color: #007bff" class="add-btn" type="submit"> + New Admission</button>
+        </form>
     </div>
+    <table id=patients class="patients-table" , style="background-color: white;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ADMISSION TYPE</th>
+                <th>DIAGNOSIS</th>
+                <th>LENGHT OF STAY</th>
+                <th>STATUS</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admission in admissions %}
+            <tr>
+                <td><a href="{% url 'get_admission_info' id=patient.id admission_id=admission.id %}"
+                        style="color:blue;text-decoration: underline;"> {{ admission.id }} </a> </td>
+                <td>{{ admission.get_type_display }}</td>
+                <td>{{ admission.diagnose }}</td>
+                <td>{{ admission.los }}</td>
+                {% if admission.status == "I" %}
+                    <td class="status in-treatment">{{ admission.get_status_display }}</td>
+                {% else %}
+                    <td class="status discharged">{{ admission.get_status_display }}</td>
+                {% endif %}
+                <td>
+                    <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+            {% endfor %}    
+        </tbody>
+    </table>
+
     <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>

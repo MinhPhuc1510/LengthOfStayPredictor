@@ -15,7 +15,8 @@ urlpatterns = [
     path('patients/create', create_patient, name='create_new_patient'),
     path('patients', get_patients, name='get_patients'),
     path('patients/<int:id>', get_patient_info, name='get_patient_info'),
-    path('admission_info', get_admission_info, name='get_admission_info'),
+    path('patients/<int:id>/admission_info/<int:admission_id>', get_admission_info, name='get_admission_info'),
+    path('patients/<int:id>/admission_info/create', add_new_admission, name='add_new_admission'),
 
 ]
 

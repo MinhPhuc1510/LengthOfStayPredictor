@@ -12,14 +12,21 @@
 
 
 {% block content %}
-<h2>Admissions</h2>
-<div style="background-color: white; padding: 10px; height: 30%; margin-right: 20px; margin-left: 20px;border-radius: 5px;">
+<div class="row">
+    <h2 style="margin-right: 2rem;">Admissions - {{ admission.id }}</h2>
+    <form action="{% url 'get_patient_info' patient.id %}" method="get">
+        {% csrf_token %}
+        <button style="background-color: #007bff;" class="add-btn" type="submit"> Back to List</button>
+    </form>
+</div>
+<div
+    style="background-color: white; padding: 10px; height: 30%; margin-right: 20px; margin-left: 20px;border-radius: 5px;">
     <div class="los">
-        <label for="Los" >Lenght Of Stay:  </label>
-        <select id="Los" name="Los" value="Short-Term">
-            <option>Long-Term</option>
-            <option>Mid-Term</option>
-            <option>Short-Term</option>
+        <label for="Los">Lenght Of Stay: </label>
+        <select id="Los" name="Los" value="M">
+            <option value="L">Long-Term</option>
+            <option value="M">Mid-Term</option>
+            <option value="S">Short-Term</option>
         </select>
     </div>
     <div class="slider-container">
@@ -40,7 +47,7 @@
 
         function updateSliderBackground() {
             const value = slider.value;
-            const percentage = (value/10) * 100; // Tính phần trăm dựa trên giá trị (0 đến 1)
+            const percentage = (value / 10) * 100; // Tính phần trăm dựa trên giá trị (0 đến 1)
             slider.style.background = `linear-gradient(to right, #007bff 0%, #007bff ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
         }
 
@@ -55,21 +62,42 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const slider = document.getElementById('lengthOfStay');
-    const statusLabel = document.getElementById('statusLabel');
+        const slider = document.getElementById('lengthOfStay');
+        const statusLabel = document.getElementById('statusLabel');
 
-    slider.addEventListener('input', function () {
-        if (this.value != 10) {
-            statusLabel.textContent = 'In treatment';
-            statusLabel.style.color = '#007bff';
-        } else {
-            statusLabel.textContent = 'Discharged';
-            statusLabel.style.color = '#28a745';
-        }
+        slider.addEventListener('input', function () {
+            if (this.value != 10) {
+                statusLabel.textContent = 'In treatment';
+                statusLabel.style.color = '#007bff';
+            } else {
+                statusLabel.textContent = 'Discharged';
+                statusLabel.style.color = '#28a745';
+            }
+        });
     });
-});
 </script>
 
+{% endblock %}
+
+
+{% block addmission %}
+<div class="column" style="background-color: white;width: 75%; padding: 2rem; margin-left: 30px;">
+    <div class="info-row">
+        <div class="info-item">
+            <strong>Admission ID:</strong> {{ admission.id }}
+        </div>
+    </div>
+    <div class="info-row">
+        <div class="info-item">
+            <strong>Admission Type:</strong> {{ admission.get_type_display }}
+        </div>
+    </div>
+    <div class="info-row">
+        <div class="info-item">
+            <strong>Diagnosis:</strong> {{ admission.diagnose }}
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 </html>

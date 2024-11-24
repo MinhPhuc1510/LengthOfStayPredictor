@@ -16,26 +16,12 @@
 
 <div class="container">
     <h2>Patients List</h2>
-
-    <div class="filter-section">
-        <!-- <div class="filter-container">
-            <button class="filter-btn"><i class="fas fa-filter"></i> Filter By</button>
-            <select class="filter-select">
-                <option>Date</option>
-                <option>Order Type</option>
-                <option>Order Status</option>
-            </select>
-            <button class="reset-btn">Reset Filter</button>
-        </div> -->
-
-        <div class="button-container">
-            <form action="{% url 'create_new_patient' %}" method="get">
-                {% csrf_token %}
-                <button class="add-btn" type="submit">+ Add Patient</button>
-            </form>
-        </div>
-
-    </div>
+    <div class="button-container">
+        <form action="{% url 'create_new_patient' %}" method="get">
+            {% csrf_token %}
+            <button class="add-btn" type="submit">+ Add Patient</button>
+        </form>
+    </div>  
 
     <table id=patients class="patients-table">
         <thead>
@@ -76,6 +62,7 @@
                 "scrollCollapse": true,
                 Hieght: '500px',
                 scrollY: '50vh',
+                pageLength: 10,
             });
         }); 
     </script>

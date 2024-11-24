@@ -9,6 +9,10 @@ body {
     background-color: #f0f2f5;
 }
 
+.row {
+    margin-bottom: 2rem;
+}
+
 .container {
     height: 98%;
     width: 100%;
@@ -91,6 +95,7 @@ select {
     border-radius: 4px;
     background-color: #f9f9f9;
     color: #333;
+    width: 100%;
 }
 
 .form-actions {
@@ -123,10 +128,26 @@ select {
 }
 
 .error-message {
-    background-color: #f8d7da; /* Light red background for error */
-    color: #721c24; /* Dark red text color */
-    padding: 10px; /* Padding around the message */
-    margin-bottom: 15px; /* Space below the message */
-    border-radius: 4px; /* Rounded corners for a nicer look */
-    border: 1px solid #f5c6cb; /* Optional: Red border for emphasis */
+    background-color: #f8d7da;
+    /* Light red background for error */
+    color: #721c24;
+    /* Dark red text color */
+    padding: 10px;
+    /* Padding around the message */
+    margin-bottom: 15px;
+    /* Space below the message */
+    border-radius: 4px;
+    /* Rounded corners for a nicer look */
+    border: 1px solid #f5c6cb;
+    /* Optional: Red border for emphasis */
 }
+
+.note-box {
+    width: 100%; /* Chiều rộng 100% container */
+    height: 100%; /* Chiều cao tùy chỉnh */
+    padding: 10px; /* Thêm khoảng cách bên trong */
+    font-size: 16px; /* Cỡ chữ */
+    border: 1px solid #ccc; /* Viền xám nhạt */
+    border-radius: 5px; /* Bo góc */
+    resize: none; /* Tắt chức năng thay đổi kích thước */
+  }

@@ -155,7 +155,7 @@ class Admission(models.Model):
     clinical_note = models.TextField(null=True, blank=True)
     icd_code = models.CharField(max_length=7)
     type = models.CharField(max_length=2, choices=ADMISSION_TYPE_CHOICES, default='OT')
-    los_number = models.IntegerField()
-    los_category = models.CharField(max_length=2, choices=ADMISSION_TYPE_CHOICES, default='S')
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='I')
+    los_number = models.IntegerField(null=True, blank=True, default=0)
+    los_category = models.CharField(null=True, blank=True, max_length=2, choices=LOS_CHOICES, default='S')
+    status = models.CharField(null=True, blank=True, max_length=2, choices=STATUS_CHOICES, default='I')
     
