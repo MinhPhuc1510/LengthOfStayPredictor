@@ -15,26 +15,33 @@
 <div class="room-management">
     <h2>Area Management</h2>
     <div class="room-grid">
-        {% for area in areas %}
+        {% for result in results %}
         <div class="room-card">
             <div class="room-header">
-                <h3 style="font-size: 1.5rem;">Area {{ area.number }}</h3>
+                <h3 style="font-size: 1.5rem;">Area {{ result.area }}</h3>
             </div>
             <div class="room-content">
-                {% if area.room_set.count != 0 %}
-                <div class="room-placeholder">
-                    <img src="{% static 'prediction_app/room-1.jpg' %}" alt="area Icon" class="room-icon">
+                {% if result.lor != 0 %}
+                <div class="slider-container">
+                    <input type="range" min="0" max="{{ result.total_max_beds }}" step="1" value="{{ result.total_num_patients }}"
+                        class="slider" disabled>
+                    <div class="slider-status">
+                        <span class="statusLabel">Remaining Beds: 0 </span>
+                    </div>
                 </div>
+                <!-- <img src="{% static 'prediction_app/room-1.jpg' %}" alt="area Icon" class="room-icon"> -->
+
                 {% else %}
                 <div class="room-placeholder">
                     <img src="{% static 'prediction_app/room-2.jpg' %}" alt="area Icon" class="room-icon">
                 </div>
                 {% endif %}
                 <div class="room-details">
-                    {% for room in area.room_set.all %}
+                    {% for room in result.rooms %}
                     <div class="row">
-                        <p class="col-8">{{ room }}</p>
-                        <div class='circle' data-progress="50" style="--progress: 180deg;">50%</div>
+                        <p class="col-8"> <a href="{% url 'manage_room' room.id %}" style="color:blue;text-decoration: underline;"> {{ room }} </a> </p>
+                        <div class='circle' data-progress="{{ room.percentage }}" style="--progress: 0deg;">{{
+                            room.percentage }}%</div>
                     </div>
                     {% endfor %}
                 </div>
@@ -43,13 +50,63 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const progressCircles = document.querySelectorAll('.circle');
+        progressCircles.forEach(function (progress) {
+            let percentage = parseFloat(progress.getAttribute('data-progress'));
+            if (isNaN(percentage)) {
+                percentage = 0;
+            }
+            let deg = percentage * 3.6;
+            console.log(`Percentage: ${percentage}, Deg: ${deg}`);
+            progress.style.setProperty('--progress', `${deg}deg`);
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slider = document.querySelectorAll('.slider');
+        slider.forEach(function (slider) {
+            console.log(slider.value, slider.max); //
+            const percentage = (slider.value / slider.max) * 100;
+            if (percentage <= (1 / 3) * 100) {
+                slider.style.background = `linear-gradient(to right, red 0%, red ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+            } else if (percentage <= (2 / 3) * 100) {
+                slider.style.background = `linear-gradient(to right, red 0%, red ${(1 / 3) * 100}%, yellow ${(1 / 3) * 100}%, yellow ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+            } else {
+                slider.style.background = `linear-gradient(to right, red 0%, red ${(1 / 3) * 100}%, yellow ${(1 / 3) * 100}%, yellow ${(2 / 3) * 100}%, blue ${(2 / 3) * 100}%, blue ${percentage}%, #ddd ${percentage}%, #ddd 100%)`;
+            }
+        }
+        )
+    });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slider = document.querySelectorAll('.slider');
+        const statusLabel = document.querySelectorAll('.statusLabel');
+        slider.forEach(function (slider) {
+            statusLabel.forEach(function (statusLabel) {
+                let remaningBeds = slider.max - slider.value;
+                statusLabel.textContent = `Remaining Beds: ${remaningBeds}`;
+                statusLabel.style.color = '#007bff';
+            })
+            
+        })
+    });
+</script>
+
 {% endblock %}
 
 
-{% block area %}
+{% block room %}
 <div>
     <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
-        href="{% url 'manage_area' %}"> <i class="fas fa-hospital"></i> area Management</a>
+        href="{% url 'manage_area' %}"> <i class="fas fa-hospital"></i> Room Management</a>
 </div>
 {% endblock %}
 

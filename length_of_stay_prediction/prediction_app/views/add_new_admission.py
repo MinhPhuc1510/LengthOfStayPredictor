@@ -16,11 +16,10 @@ def add_new_admission(request, id):
     if request.method == 'POST':
         data = request.POST.copy()
         data['patient'] = patient
-        room = Room.objects.get(id=data['room'])
-        print(data)
+        # print(data)
 
         form = AddNewAdmission(data)
-        print(form.errors)
+        # print(form.errors)
         if form.is_valid():
             try:
                 form.save()
