@@ -50,7 +50,7 @@
                 {% if user.role == "admin" or user.role == "doctor"%}
                 {% block room %}
                 <div class="Room-Management">
-                    <a href="{% url 'manage_room' %}"> <i class="fas fa-hospital"></i> Room Management </a>
+                    <a href="{% url 'manage_area' %}"> <i class="fas fa-hospital"></i> Room Management </a>
                 </div>
                 {% endblock %}
 

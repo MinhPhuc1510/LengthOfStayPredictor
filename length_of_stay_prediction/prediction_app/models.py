@@ -3,7 +3,6 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 
 
-
 class UserManager(BaseUserManager):
     def create_user(self, username, date_of_birth, password=None):
         """
@@ -81,11 +80,24 @@ class User(AbstractBaseUser):
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
+class Area(models.Model):
+    status = models.CharField(max_length=10, null=True, blank=True)
+    name = models.CharField(max_length=10)
+    created_time = models.DateTimeField(auto_now_add=True)  
+    updated_time = models.DateTimeField(auto_now=True)
+    max_rooms = models.IntegerField(null=True, blank=True, default=4)
+
+
 class Room(models.Model):
+    area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=10, null=True, blank=True)
     number = models.IntegerField()
-    created_time = models.DateTimeField(auto_now_add=True)  # Lưu ngày/giờ khi bản ghi được tạo
+    created_time = models.DateTimeField(auto_now_add=True)  
     updated_time = models.DateTimeField(auto_now=True)
+    max_beds = models.IntegerField(null=True, blank=True, default=4)
+
+    def __str__(self):
+        return f"{_ if self.area is None else self.area.name}-{self.number}"
 
 class Patient(models.Model):
     GENDER_CHOICES = [
@@ -135,8 +147,7 @@ class Patient(models.Model):
         default='other'
     )
     photo = models.ImageField(upload_to='patient_photos/', blank=True, null=True)
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
-    created_time = models.DateTimeField(auto_now_add=True)  # Lưu ngày/giờ khi bản ghi được tạo
+    created_time = models.DateTimeField(auto_now_add=True)  
     updated_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -168,6 +179,6 @@ class Admission(models.Model):
     los_number = models.IntegerField(null=True, blank=True, default=0)
     los_category = models.CharField(null=True, blank=True, max_length=2, choices=LOS_CHOICES, default='S')
     status = models.CharField(null=True, blank=True, max_length=2, choices=STATUS_CHOICES, default='I')
-    created_time = models.DateTimeField(auto_now_add=True)  # Lưu ngày/giờ khi bản ghi được tạo
+    created_time = models.DateTimeField(auto_now_add=True) 
     updated_time = models.DateTimeField(auto_now=True)
-    
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)

@@ -6,3 +6,4 @@ from .get_admission_info import *
 from .add_new_admission import *
 from .room_managements import *
 from .home import *
+from . area_managements import *

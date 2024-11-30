@@ -82,6 +82,14 @@
 					<label for="icd-code">ICD-Code</label>
 					<input type="text" id="icd-code" name="icd_code" placeholder="Enter patient's icd-code" required>
 				</div>
+				<div class="col-4">
+					<label for="room">Room</label>
+					<select id="room" name="room" required>
+						{% for room in rooms %}
+							<option value="{{ room.id }}">{{ room }}</option>
+						{% endfor %}
+					</select>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-12">

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+<html>
+
+
+{% block title %} Length Of Stay {% endblock %}
+
+{% block style %}
+{{ block.super }}
+<!-- Additional CSS specific to dashboard if needed -->
+<link rel="stylesheet" href="{% static 'prediction_app/room_management.css' %}">
+{% endblock %}
+
+{% block page %}
+<div class="room-management">
+    <h2>Area Management</h2>
+    <div class="room-grid">
+        {% for area in areas %}
+        <div class="room-card">
+            <div class="room-header">
+                <h3 style="font-size: 1.5rem;">Area {{ area.number }}</h3>
+            </div>
+            <div class="room-content">
+                {% if area.room_set.count != 0 %}
+                <div class="room-placeholder">
+                    <img src="{% static 'prediction_app/room-1.jpg' %}" alt="area Icon" class="room-icon">
+                </div>
+                {% else %}
+                <div class="room-placeholder">
+                    <img src="{% static 'prediction_app/room-2.jpg' %}" alt="area Icon" class="room-icon">
+                </div>
+                {% endif %}
+                <div class="room-details">
+                    {% for room in area.room_set.all %}
+                    <div class="row">
+                        <p class="col-8">{{ room }}</p>
+                        <div class='circle' data-progress="50" style="--progress: 180deg;">50%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block area %}
+<div>
+    <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+        href="{% url 'manage_area' %}"> <i class="fas fa-hospital"></i> area Management</a>
+</div>
+{% endblock %}
+
+</html>
