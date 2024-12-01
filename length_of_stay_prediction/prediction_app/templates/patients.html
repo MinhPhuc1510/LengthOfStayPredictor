@@ -32,7 +32,7 @@
                 <th>DOB</th>
                 <th>Marital Status</th>
                 <th>Religion</th>
-                <th>Actions</th>
+                <!-- <th>Actions</th> -->
             </tr>
         </thead>
         <tbody>
@@ -44,10 +44,10 @@
                 <td>{{ patient.date_of_birth }}</td>
                 <td>{{ patient.get_marital_status_display }}</td>
                 <td>{{ patient.get_religion_display }}</td>
-                <td>
+                <!-- <td>
                     <button class="action-btn edit"><i class="fas fa-edit"></i></button>
                     <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                </td>
+                </td> -->
             </tr>
             {% endfor %}
         </tbody>

@@ -23,10 +23,10 @@
         <div class="header">
             <div class="app-name">LoS</div>
             <div class="user-panel">
-                <div class="notification-icon">
-                    <i class="fas fa-bell"></i> <!-- Icon thông báo -->
-                    <span class="notification-badge">3</span> <!-- Số thông báo -->
-                </div>
+                <!-- <div class="notification-icon">
+                    <i class="fas fa-bell"></i> 
+                    <span class="notification-badge">3</span> 
+                </div> -->
                 <img src="{% static 'prediction_app/images.png' %}" alt="Form Image" class="image">
                 <span class="user-name">{{request.user}}</span>
                 <span class="user-name" style="top: 20px; text-align: center;">{{request.user.role}}</span>
@@ -50,7 +50,7 @@
                 {% if user.role == "admin" or user.role == "doctor"%}
                 {% block room %}
                 <div class="Room-Management">
-                    <a href="{% url 'manage_room' %}"> <i class="fas fa-hospital"></i> Room Management </a>
+                    <a href="{% url 'manage_area' %}"> <i class="fas fa-hospital"></i> Room Management </a>
                 </div>
                 {% endblock %}
 

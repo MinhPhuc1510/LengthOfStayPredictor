@@ -13,7 +13,7 @@ from datetime import datetime
 def create_patient(request):
     if request.method == 'POST':
         data = request.POST.copy()
-        print(data)
+        # print(data)
         dob = data.get("date_of_birth")
         if dob:
             # Calculate the age from the date of birth
@@ -24,7 +24,7 @@ def create_patient(request):
             data['age'] = calculated_age
 
         form = AddNewPatientForm(data)
-        print(form.errors)
+        # print(form.errors)
         if form.is_valid():
             try:
                 form.save()

@@ -63,11 +63,14 @@
             {% csrf_token %}
             <button style="background-color: #007bff;" class="add-btn" type="submit"> Back to List</button>
         </form>
+
+        {% if alow_admission_request %}
         <form style="margin-right: 3rem;" class="ml-auto" action="{% url 'add_new_admission' patient.id %}"
             method="get">
             {% csrf_token %}
             <button style="background-color: #007bff" class="add-btn" type="submit"> + New Admission</button>
         </form>
+        {% endif %}
     </div>
     <table id=patients class="patients-table" , style="background-color: white;">
         <thead>
@@ -76,8 +79,9 @@
                 <th>ADMISSION TYPE</th>
                 <th>DIAGNOSIS</th>
                 <th>LENGHT OF STAY</th>
+                <th>ADMISSION_DATE</th>
                 <th>STATUS</th>
-                <th>ACTION</th>
+                <!-- <th>ACTION</th> -->
             </tr>
         </thead>
         <tbody>
@@ -87,16 +91,17 @@
                         style="color:blue;text-decoration: underline;"> {{ admission.id }} </a> </td>
                 <td>{{ admission.get_type_display }}</td>
                 <td>{{ admission.diagnose }}</td>
-                <td>{{ admission.los }}</td>
+                <td>{{ admission.los_number }}</td>
+                <td>{{ admission.created_time }}</td>
                 {% if admission.status == "I" %}
                     <td class="status in-treatment">{{ admission.get_status_display }}</td>
                 {% else %}
                     <td class="status discharged">{{ admission.get_status_display }}</td>
                 {% endif %}
-                <td>
+                <!-- <td>
                     <button class="action-btn edit"><i class="fas fa-edit"></i></button>
                     <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                </td>
+                </td> -->
             </tr>
             {% endfor %}    
         </tbody>
@@ -112,6 +117,8 @@
                 "scrollCollapse": true,
                 Hieght: '500px',
                 scrollY: '50vh',
+                pageLength: 10,
+                order: [[5, 'desc']],
             });
         }); 
     </script>
