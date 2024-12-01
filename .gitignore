@@ -7,3 +7,5 @@ Lib/
 Scripts/
 Include/
 *.cfg
+
+venv

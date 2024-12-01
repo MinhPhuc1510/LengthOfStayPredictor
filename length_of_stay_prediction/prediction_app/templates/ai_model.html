@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page %}
+<link rel="stylesheet" type="text/css" href="{% static 'prediction_app/ai_model.css' %}">
+<h2>AI Model</h2>
+<div class="stats">
+  <div class="stat">
+    <h3>Accuracy</h3>
+    <img src="{% static 'prediction_app/icons/accuracy.png' %}" alt="Accuracy Icon">
+    <p class="value">{{ accuracy }}%</p>
+    <p> <b>Change: </b><span class="change" style="color: {{ change_color }};">{{ accuracy_change }}</span> from last model</p>
+  </div>
+  <div class="stat">
+    <h3>Number of Samples</h3>
+    <img src="{% static 'prediction_app/icons/samples.png' %}" alt="Samples Icon">
+    <p class="value">{{ num_samples }}</p>
+  </div>
+  <div class="stat">
+    <h3>Last Training Time</h3>
+    <img src="{% static 'prediction_app/icons/training_time.png' %}" alt="Training Time Icon">
+    <p class="value">{{ last_training_time }}</p>
+  </div>
+</div>
+<div class="chart">
+  <h3>Performance Chart</h3>
+  <canvas id="performanceChart"></canvas>
+</div>
+<button id="retrainButton">Re-train Model</button>
+<div id="fileUploadModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form id="fileUploadForm" method="post" enctype="multipart/form-data">
+      <input type="file" name="trainingFile" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+<script>
+    // Get the modal
+    var modal = document.getElementById("fileUploadModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("retrainButton");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+{% endblock %}
+
+{% block ai %}
+<div>
+    <a style="color: white; background-color: #007bff;border-radius: 5px;padding: 5px 10px;text-decoration: none;"
+        href="{% url 'ai_model' %}"> <i class="fas fa-building"></i> AI Models</a>
+</div>
+
+{% endblock %}

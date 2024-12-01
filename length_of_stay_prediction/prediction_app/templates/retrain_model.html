@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page %}
+<link rel="stylesheet" type="text/css" href="{% static 'prediction_app/ai_model.css' %}">
+<h2>Re-train Model</h2>
+<div class="chart">
+  <h3>Upload New Training Data</h3>
+  <form id="fileUploadForm" method="post" enctype="multipart/form-data">
+    <input type="file" name="trainingFile" required>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock %}

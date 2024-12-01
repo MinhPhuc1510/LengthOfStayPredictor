@@ -2,6 +2,7 @@
 
 from django.urls import path
 from prediction_app.views import *
+from prediction_app.views.ai_model import ai_model_view, retrain_model
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -19,7 +20,8 @@ urlpatterns = [
     path('patients/<int:id>/admission_info/<int:admission_id>', get_admission_info, name='get_admission_info'),
     path('patients/<int:id>/admission_info/create', add_new_admission, name='add_new_admission'),
     path('rooms', manage_room, name='manage_room'),
-
+    path('ai-model/', ai_model_view, name='ai_model'),
+    path('retrain-model/', retrain_model, name='retrain_model'),
 ]
 
 

@@ -171,3 +171,10 @@ class Admission(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)  # Lưu ngày/giờ khi bản ghi được tạo
     updated_time = models.DateTimeField(auto_now=True)
     
+class AIModelStats(models.Model):
+    accuracy = models.FloatField()
+    num_samples = models.IntegerField()
+    last_training_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"Accuracy: {self.accuracy}, Samples: {self.num_samples}, Last Trained: {self.last_training_time}"
