@@ -81,5 +81,5 @@ To set up and run this project locally, follow these steps:
 ## Usage
 
 - Fill in the form with patient details: gender, age, and illness.
-- Click on the "Predict" button to get the predicted length of stay.
+- Click on the "Predict" button to get the predicted length of stay..
 
