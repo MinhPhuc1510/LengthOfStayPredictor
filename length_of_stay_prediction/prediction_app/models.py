@@ -178,6 +178,7 @@ class Admission(models.Model):
     type = models.CharField(max_length=2, choices=ADMISSION_TYPE_CHOICES, default='OT')
     los_number = models.IntegerField(null=True, blank=True, default=3)
     los_category = models.CharField(null=True, blank=True, max_length=2, choices=LOS_CHOICES, default='S')
+    los_actual = models.IntegerField(null=True, blank=True, default=0)
     status = models.CharField(null=True, blank=True, max_length=2, choices=STATUS_CHOICES, default='I')
     created_time = models.DateTimeField(auto_now_add=True) 
     updated_time = models.DateTimeField(auto_now=True)
@@ -185,8 +186,8 @@ class Admission(models.Model):
 
 
 class AIModelStats(models.Model):
-    accuracy = models.FloatField()
-    num_samples = models.IntegerField()
+    accuracy = models.FloatField(null=True, blank=True)
+    num_samples = models.IntegerField(null=True, blank=True)
     last_training_time = models.DateTimeField()
 
     def __str__(self):
