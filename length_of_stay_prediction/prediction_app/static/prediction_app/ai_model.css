@@ -62,12 +62,23 @@
     font-weight: bold;
 }
 
+.chart-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .chart {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 10px;
+}
+
+#performanceChart {
+    width: 100% !important;
+    height: auto !important;
 }
 
 button {
