@@ -20,9 +20,9 @@ class PerformanceChart(Chart):
         medium_term_actual = admissions.filter(los_actual__range=(3, 6), status='D').count()
         long_term_actual = admissions.filter(los_actual__gt=6, status='D').count()
 
-        short_term_predicted = admissions.filter(los_number__range=(0, 2), status='D').count()
-        medium_term_predicted = admissions.filter(los_number__range=(3, 6), status='D').count()
-        long_term_predicted = admissions.filter(los_number__gt=6, status='D').count()
+        short_term_predicted = admissions.filter(los_category='S', status='D').count()
+        medium_term_predicted = admissions.filter(los_category='M', status='D').count()
+        long_term_predicted = admissions.filter(los_category='L', status='D').count()
 
         return [
             DataSet(label="Actual", data=[short_term_actual, medium_term_actual, long_term_actual], backgroundColor="rgba(75, 192, 192, 0.6)"),
@@ -39,8 +39,19 @@ def ai_model_view(request):
     try:
         # Calculate accuracy based on Admission records
         total_discharged = Admission.objects.filter(status='D').count()
-        correct_predictions = Admission.objects.filter(status='D', los_actual=F('los_number')).count()
-        accuracy = (correct_predictions / total_discharged) * 100 if total_discharged > 0 else None
+        correct_category_predictions = 0
+        for admission in Admission.objects.filter(status='D'):
+            if admission.los_actual <= 2:
+                category_actual = 'S'
+            elif admission.los_actual <= 6:
+                category_actual = 'M'
+            else:
+                category_actual = 'L'
+
+            if category_actual == admission.los_category:
+                correct_category_predictions += 1
+
+        accuracy = (correct_category_predictions / total_discharged) * 100 if total_discharged > 0 else None
 
         # Number of samples is the number of discharged records
         num_samples = total_discharged
