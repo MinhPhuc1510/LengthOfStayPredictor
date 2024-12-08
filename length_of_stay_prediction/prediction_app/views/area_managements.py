@@ -8,7 +8,7 @@ from django.db.models import Q, Count, F, ExpressionWrapper, IntegerField, Sum
 @permission_classes([IsAuthenticated])
 def manage_area(request):
     areas = Area.objects.all()
-    patient_in_treatment = Count("admission", filter=Q(admission__status="I"))
+    patient_in_treatment = Count("admission", filter=Q(admission__status="In Treatment"))
     results = []
 
     for area in areas:
@@ -37,4 +37,5 @@ def manage_area(request):
             "total_max_beds": total_max_beds,
             "total_num_patients": total_num_patients
         })
+    # print(results)
     return render(request, 'area_management.html', {'results': results})

@@ -20,7 +20,7 @@
                     <img src="{% static 'prediction_app/user.jpg' %}" alt="Patient Avatar" class="image123" />
                 </div>
                 <div class="patient-details" style="text-align: center;">
-                    <h2>{{ patient }}</h2>
+                    <h2 style="font-size: 1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ patient }}</h2>
                     <p style="margin-bottom: 0;">{{ patient.get_gender_display }}</p>
                     <p>ID: {{ patient.id }}</p>
                 </div>
@@ -38,12 +38,12 @@
             </div>
             <div class="info-row">
                 <div class="info-item">
-                    <strong>Marital Status:</strong> {{ patient.get_marital_status_display }}
+                    <strong>Marital Status:</strong> {{ patient.marital_status }}
                 </div>
             </div>
             <div class="info-row">
                 <div class="info-item">
-                    <strong>Religion:</strong> {{ patient.get_religion_display }}
+                    <strong>Religion:</strong> {{ patient.religion }}
                 </div>
             </div>
             <div class="info-row">
@@ -87,13 +87,13 @@
         <tbody>
             {% for admission in admissions %}
             <tr>
-                <td><a href="{% url 'get_admission_info' id=patient.id admission_id=admission.id %}"
-                        style="color:blue;text-decoration: underline;"> {{ admission.id }} </a> </td>
-                <td>{{ admission.get_type_display }}</td>
+                <td><a href="{% url 'get_admission_info' id=patient.id admission_id=admission.hadm_id %}"
+                        style="color:blue;text-decoration: underline;"> {{ admission.hadm_id }} </a> </td>
+                <td>{{ admission.admission_type }}</td>
                 <td>{{ admission.diagnose }}</td>
                 <td>{{ admission.los_number }}</td>
-                <td>{{ admission.created_time }}</td>
-                {% if admission.status == "I" %}
+                <td>{{ admission.admittime }}</td>
+                {% if admission.status == "In Treatment" %}
                     <td class="status in-treatment">{{ admission.get_status_display }}</td>
                 {% else %}
                     <td class="status discharged">{{ admission.get_status_display }}</td>

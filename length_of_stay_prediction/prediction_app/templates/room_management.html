@@ -39,7 +39,7 @@
                 <div class="room-details">
                     {% for admission in result.admissions %}
                     <div class="row">
-                        <p class="col-8">  {{ admission.admission.patient }} </a> </p>
+                        <p class="col-8">  {{ admission.admission.subject }} </a> </p>
                         <div class='circle' data-progress="{{ admission.percentage }}" style="--progress: 0deg;">{{
                             admission.percentage }}%</div>
                     </div>

@@ -20,7 +20,6 @@
 				<div class="upload-icon">
 					<i class="fas fa-camera"></i>
 				</div>
-				<!-- <a href="#" class="upload-text">Upload Photo</a> -->
 				<div class="upload-text">
 					{{ form.photo }}
 				</div>
@@ -53,35 +52,23 @@
 
 			<div class="form-row">
 				<div class="form-group">
-					<label for="religion">Religion</label>
-					<select id="religion" name="religion" required>
-						<option value="NS">Not Specified</option>
-						<option value="CH">Christian</option>
-						<option value="IS">Islam</option>
-						<option value="JW">Jewish</option>
-						<option value="BD">Buddhist</option>
-						<option value="OT">Other</option>
-					</select>
+					<label for="gender">Gender</label>
+					{{ form.gender }}
 				</div>
 				<div class="form-group">
-					<label for="gender">Gender</label>
-					<select id="gender" name="gender" required>
-						<option value="M">Male</option>
-						<option value="F">Female</option>
-						<option value="O">Other</option>
-					</select>
+					<label for="religion">Religion</label>
+					{{ form.religion }}
 				</div>
 			</div>
 
 			<div class="form-row">
 				<div class="form-group">
 					<label for="marital_status">Marital Status</label>
-					<select id="marital_status" name="marital_status" required>
-						<option value="S">Single</option>
-						<option value="M">Married</option>
-						<option value="SP">Separated</option>
-						<option value="W">Widowed</option>
-					</select>
+					{{ form.marital_status }}
+				</div>
+				<div class="form-group">
+					<label for="marital_status">Marital Status</label>
+					{{ form.ethnicity }}
 				</div>
 				<div class="form-group">
 					<label for="address">Address</label>

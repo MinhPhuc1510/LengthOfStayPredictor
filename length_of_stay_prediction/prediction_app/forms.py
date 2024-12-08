@@ -7,6 +7,33 @@ class AddNewPatientForm(forms.ModelForm):
         fields = '__all__'
 
 class AddNewAdmission(forms.ModelForm):
+    ICD_CODE = [
+        (0, ' infectious and parasitic diseases'),
+        (1, ' neoplasms'),
+        (2, ' endocrine, nutritional and metabolic diseases, and immunity disorders'),
+        (3, ' diseases of the blood and blood-forming organs'),
+        (4, ' mental disorders'),
+        (5, ' diseases of the nervous system and sense organs'),
+        (6, ' diseases of the circulatory system'),
+        (7, ' diseases of the respiratory system'),
+        (8, ' diseases of the digestive system'),
+        (9, ' diseases of the genitourinary system'),
+        (10, ' complications of pregnancy, childbirth, and the puerperium'),
+        (11, ' diseases of the skin and subcutaneous tissue'),
+        (12, ' diseases of the musculoskeletal system and connective tissue'),
+        (13, ' congenital anomalies'),
+        (14, ' certain conditions originating in the perinatal period'),
+        (15, ' symptoms, signs, and ill-defined conditions'),
+        (16, ' injury and poisoning'),
+    ]
+
+    icd_code = forms.MultipleChoiceField(
+        choices=ICD_CODE,
+        widget=forms.SelectMultiple(attrs={
+            'id': 'icd_code', 
+            'required': True,
+        }),
+    )
     class Meta:
         model= Admission
         fields = '__all__'

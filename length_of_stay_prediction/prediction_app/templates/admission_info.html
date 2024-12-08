@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="row">
-    <h2 style="margin-right: 2rem;">Admissions - {{ admission.id }}</h2>
+    <h2 style="margin-right: 2rem;">Admissions - {{ admission.hadm_id }}</h2>
     <form action="{% url 'get_patient_info' patient.id %}" method="get">
         {% csrf_token %}
         <button style="background-color: #007bff;" class="add-btn" type="submit"> Back to List</button>
@@ -24,9 +24,10 @@
     <div class="los">
         <label for="Los">Lenght Of Stay: </label>
         <select id="Los" name="Los">
-            <option value="L" {% if admission.los_category == 'L' %}selected{% endif %}>Long-Term</option>
-            <option value="M" {% if admission.los_category == 'M' %}selected{% endif %}>Mid-Term</option>
-            <option value="S" {% if admission.los_category == 'S' %}selected{% endif %}>Short-Term</option>
+            <option value="Less than 3 days" {% if admission.los_category == 'Less than 3 days' %}selected{% endif %}>Less than 3 days</option>
+            <option value="3-7 days" {% if admission.los_category == '3-7 days' %}selected{% endif %}>3-7 days</option>
+            <option value="7-14 days" {% if admission.los_category == '7-14 days' %}selected{% endif %}>7-14 days</option>
+            <option value="More than 14 days" {% if admission.los_category == 'More than 14 days' %}selected{% endif %}>More than 14 days</option>
         </select>
     </div>
     <div class="slider-container">
@@ -96,17 +97,22 @@
 <div class="column" style="background-color: white;width: 75%; padding: 2rem; margin-left: 30px;">
     <div class="info-row">
         <div class="info-item">
-            <strong>Admission ID:</strong> {{ admission.id }}
+            <strong>Admission ID:</strong> {{ admission.hadm_id }}
         </div>
     </div>
     <div class="info-row">
         <div class="info-item">
-            <strong>Admission Type:</strong> {{ admission.get_type_display }}
+            <strong>Admission Type:</strong> {{ admission.admission_type }}
         </div>
     </div>
     <div class="info-row">
         <div class="info-item">
             <strong>Diagnosis:</strong> {{ admission.diagnose }}
+        </div>
+    </div>
+    <div class="info-row">
+        <div class="info-item">
+            <strong>Room:</strong> {{ admission.room }}
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@ from django.utils.timezone import now
 @permission_classes([IsAuthenticated])
 def manage_room(request, id):
     room = Room.objects.filter(id=id)
-    patient_in_treatment = Count("admission", filter=Q(admission__status="I"))
+    patient_in_treatment = Count("admission", filter=Q(admission__status="In Treatment"))
 
     room = room.annotate(num_patients=patient_in_treatment).annotate(percentage=ExpressionWrapper(
         F("num_patients") * 100.0 / F("max_beds"),
@@ -27,10 +27,10 @@ def manage_room(request, id):
     else:
         occupancy_rate = 0
 
-    admissions =  room.first().admission_set.filter(status="I")
+    admissions =  room.first().admission_set.filter(status="In Treatment")
     admissions_results = []
     for admission in admissions:
-        duaration = (now() - admission.created_time).days
+        duaration = (now() - admission.admittime).days
         percentage = int((duaration / admission.los_number) * 100)
         admissions_results.append({
             "admission": admission,
@@ -44,6 +44,6 @@ def manage_room(request, id):
         "total_num_patients": total_num_patients,
         "admissions": admissions_results
     }
-    print(result)
+    # print(result)
 
     return render(request, 'room_management.html', {'result': result})

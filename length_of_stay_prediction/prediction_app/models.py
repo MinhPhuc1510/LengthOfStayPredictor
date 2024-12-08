@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
-
+from datetime import datetime, timedelta
 
 class UserManager(BaseUserManager):
     def create_user(self, username, date_of_birth, password=None):
@@ -41,7 +41,8 @@ class User(AbstractBaseUser):
         ('doctor', 'Doctor'),
         ('patient', 'Patient'),
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='admin')
+    role = models.CharField(
+        max_length=10, choices=ROLE_CHOICES, default='admin')
 
     email = models.EmailField(
         verbose_name="email address",
@@ -50,7 +51,7 @@ class User(AbstractBaseUser):
     )
     date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True) 
+    created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
@@ -76,14 +77,16 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.role == 'admin'
+
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
+
 class Area(models.Model):
     status = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=10)
-    created_time = models.DateTimeField(auto_now_add=True)  
+    created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
     max_rooms = models.IntegerField(null=True, blank=True, default=4)
 
@@ -92,42 +95,47 @@ class Room(models.Model):
     area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=10, null=True, blank=True)
     number = models.IntegerField()
-    created_time = models.DateTimeField(auto_now_add=True)  
+    created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
     max_beds = models.IntegerField(null=True, blank=True, default=4)
 
     def __str__(self):
         return f"{_ if self.area is None else self.area.name}-{self.number}"
 
+
 class Patient(models.Model):
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),
-        ('O', 'Other'),
     ]
 
     MARITAL_STATUS_CHOICES = [
-        ('S', 'Single'),
-        ('M', 'Married'),
-        ('SP', 'Separated'),
-        ('W', 'Widowed'),
+        ('SINGLE', 'SINGLE'),
+        ('MARRIED', 'MARRIED'),                     
+        ('WIDOWED', 'WIDOWED'),
+        ('DIVORCED', 'DIVORCED'),
+        ('SEPARATED', 'SEPARATED'),
+        ('LIFE PARTNER', 'LIFE PARTNER'),
+        ('UNKNOWN', 'UNKNOWN'),
     ]
 
     RELIGION_CHOICES = [
-        ('NS', 'Not Specified'),
-        ('CH', 'Christian'),
-        ('IS', 'Islam'),
-        ('JW', 'Jewish'),
-        ('BD', 'Buddhist'),
-        ('OT', 'Other'),
+        ('CATHOLIC', 'CATHOLIC'),                 
+        ('PROTESTANT QUAKER', 'PROTESTANT QUAKER'),
+        ('UNOBTAINABLE', 'UNOBTAINABLE'),
+        ('JEWISH', 'JEWISH'),
+        ('NOT SPECIFIED', 'NOT SPECIFIED'),
+        ('OTHER', 'OTHER'),
     ]
 
     ETHNICITY_CHOICES = [
-        ('asian', 'Asian'),
-        ('black', 'Black / African American'),
-        ('white', 'White'),
-        ('hispanic', 'Hispanic / Latino'),
-        ('other', 'Other'),
+        ('WHITE', 'WHITE'),                                                                                            
+        ('BLACK/AFRICAN AMERICAN', 'BLACK/AFRICAN AMERICAN'),
+        ('HISPANIC OR LATINO', 'HISPANIC OR LATINO'),
+        ('ASIAN', 'ASIAN'),
+        ('UNABLE TO OBTAIN', 'UNABLE TO OBTAIN'),
+        ('UNKNOWN/NOT SPECIFIED  ', 'UNKNOWN/NOT SPECIFIED '),
+        ('OTHER', 'OTHER'),
     ]
 
     first_name = models.CharField(max_length=50)
@@ -137,52 +145,102 @@ class Patient(models.Model):
     date_of_birth = models.DateField()
     address = models.CharField(max_length=150,  blank=True, null=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    marital_status = models.CharField(max_length=2, choices=MARITAL_STATUS_CHOICES)
-    religion = models.CharField(max_length=2, choices=RELIGION_CHOICES, default='NS')
+    marital_status = models.CharField(
+        max_length=15, choices=MARITAL_STATUS_CHOICES, default='UNKNOWN')
+    religion = models.CharField(
+        max_length=20, choices=RELIGION_CHOICES)
     ethnicity = models.CharField(
-        max_length=100, 
-        choices=ETHNICITY_CHOICES, 
-        null=True, 
+        max_length=100,
+        choices=ETHNICITY_CHOICES,
+        null=True,
         blank=True,
-        default='other'
+        default='ASIAN'
     )
-    photo = models.ImageField(upload_to='patient_photos/', blank=True, null=True)
-    created_time = models.DateTimeField(auto_now_add=True)  
+    photo = models.ImageField(
+        upload_to='patient_photos/', blank=True, null=True)
+    created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-    
+
 
 class Admission(models.Model):
+    LOS_LABLE_TO_NUMBER = {
+        'Less than 3 days': 3,
+        '3-7 days': 7,
+        '7-14 days': 14,
+        'More than 14 days': 14,
+    }
     ADMISSION_TYPE_CHOICES = [
-        ('E', 'Emergency '),
-        ('U', 'Urgent '),
-        ('EL', 'Elective '),
-        ('OT', 'Other'),
+        ('EMERGENCY', 'EMERGENCY'),
+        ('ELECTIVE', 'ELECTIVE'),
+        ('URGENT', 'URGENT'),
     ]
     LOS_CHOICES = [
-        ('L', 'Long-Term'),
-        ('M', 'Mid-Term'),
-        ('S', 'Short-Term'),
+        ('Less than 3 days', 'Less than 3 days'),
+        ('3-7 days', '3-7 days'),
+        ('7-14 days', '7-14 days'),
+        ('More than 14 days', 'More than 14 days'),
     ]
     STATUS_CHOICES = [
-        ('I', 'In Treatment'),
-        ('D', 'Dischagred'),
+        ('In Treatment', 'In Treatment'),
+        ('Dischagred', 'Dischagred'),
     ]
-    
-    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
+    INSURANCE_CHOICES = [
+        ('Medicare', 'Medicare'),
+        ('Private', 'Private'),
+        ('Medicaid', 'Medicaid'),
+        ('Government', 'Government'),
+        ('Self Pay', 'Self Pay')
+    ]
+    ICD_CODE = [
+        ('0', ' infectious and parasitic diseases'),
+        ('1', ' neoplasms'),
+        ('2', ' endocrine, nutritional and metabolic diseases, and immunity disorders'),
+        ('3', ' diseases of the blood and blood-forming organs'),
+        ('4', ' mental disorders'),
+        ('5', ' diseases of the nervous system and sense organs'),
+        ('6', ' diseases of the circulatory system'),
+        ('7', ' diseases of the respiratory system'),
+        ('8', ' diseases of the digestive system'),
+        ('9', ' diseases of the genitourinary system'),
+        ('10', ' complications of pregnancy, childbirth, and the puerperium'),
+        ('11', ' diseases of the skin and subcutaneous tissue'),
+        ('12', ' diseases of the musculoskeletal system and connective tissue'),
+        ('13', ' congenital anomalies'),
+        ('14', ' certain conditions originating in the perinatal period'),
+        ('15', ' symptoms, signs, and ill-defined conditions'),
+        ('16', ' injury and poisoning'),
+    ]
+
+    hadm_id = models.BigAutoField(primary_key=True)
+    subject = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    insurance = models.TextField(max_length=10, choices=INSURANCE_CHOICES)
     diagnose = models.TextField()
     clinical_note = models.TextField(null=True, blank=True)
-    icd_code = models.CharField(max_length=7)
-    type = models.CharField(max_length=2, choices=ADMISSION_TYPE_CHOICES, default='OT')
+    icd_code = models.JSONField()
+    admission_type = models.CharField(max_length=10, choices=ADMISSION_TYPE_CHOICES)
     los_number = models.IntegerField(null=True, blank=True, default=3)
-    los_category = models.CharField(null=True, blank=True, max_length=2, choices=LOS_CHOICES, default='S')
+    los_lable = models.CharField(
+        null=True, blank=True, max_length=20, choices=LOS_CHOICES)
     los_actual = models.IntegerField(null=True, blank=True, default=0)
-    status = models.CharField(null=True, blank=True, max_length=2, choices=STATUS_CHOICES, default='I')
-    created_time = models.DateTimeField(auto_now_add=True) 
+    status = models.CharField(
+        null=True, blank=True, max_length=15, choices=STATUS_CHOICES, default='In Treatment')
+    admittime = models.DateTimeField(auto_now_add=True)
+    dischtime = models.DateTimeField(blank=True, null=True)
+    dischtime_estimate = models.DateTimeField(blank=True, null=True)
     updated_time = models.DateTimeField(auto_now=True)
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.los_lable:
+            self.los_number = self.LOS_LABLE_TO_NUMBER.get(self.los_lable)
+        if self.admittime and self.los_number:
+            self.dischtime_estimate = self.admittime + timedelta(days=self.los_number)
+        elif self.admittime is None and self.los_number:
+            self.dischtime_estimate = datetime.now() + timedelta(days=self.los_number)
+        super().save(*args, **kwargs)
 
 
 class AIModelStats(models.Model):

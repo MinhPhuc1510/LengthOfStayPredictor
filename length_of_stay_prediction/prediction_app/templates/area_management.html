@@ -89,13 +89,14 @@
     document.addEventListener('DOMContentLoaded', function () {
         const slider = document.querySelectorAll('.slider');
         const statusLabel = document.querySelectorAll('.statusLabel');
-        slider.forEach(function (slider) {
-            statusLabel.forEach(function (statusLabel) {
-                let remaningBeds = slider.max - slider.value;
-                statusLabel.textContent = `Remaining Beds: ${remaningBeds}`;
-                statusLabel.style.color = '#007bff';
-            })
-            
+        slider.forEach(function (slider, key_1) {
+            let remaningBeds = slider.max - slider.value;
+            statusLabel.forEach(function (statusLabel, key_2) {
+                if (key_1 === key_2){{
+                    statusLabel.textContent = `Remaining Beds: ${remaningBeds}`;
+                    statusLabel.style.color = '#007bff';
+                }}
+            })    
         })
     });
 </script>

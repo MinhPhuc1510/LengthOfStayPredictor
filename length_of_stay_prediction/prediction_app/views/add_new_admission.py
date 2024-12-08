@@ -10,12 +10,12 @@ import logging
 @permission_classes([IsAuthenticated])
 def add_new_admission(request, id):
     patient = Patient.objects.get(id=id)
-    patient_in_treatment = Count("admission", filter=Q(admission__status="I"))
+    patient_in_treatment = Count("admission", filter=Q(admission__status="In Treatment"))
     rooms = Room.objects.annotate(num_patients=patient_in_treatment).filter(num_patients__lt=F("max_beds"))
     
     if request.method == 'POST':
         data = request.POST.copy()
-        data['patient'] = patient
+        data['subject'] = patient
         # print(data)
 
         form = AddNewAdmission(data)
@@ -24,9 +24,9 @@ def add_new_admission(request, id):
             try:
                 form.save()
                 messages.success(request, 'Sent admission request Successfully!')
-            except:
-                logging.error('Error saving')
-                return render(request, 'add_new_admission.html', {'error_message': 'Error saving', 'patient':patient, "rooms": rooms})
+            except Exception as e:
+                logging.error(f'Error saving: {e}')
+                return render(request, 'add_new_admission.html', {'error_message': 'Error saving', 'patient':patient, "rooms": rooms, 'form': form})
         else:
             return render(request, 'add_new_admission.html', {'form': form, 'error_message': 'Invalid input.', 'patient':patient, "rooms": rooms})
     elif request.method == 'GET':
