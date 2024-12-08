@@ -170,7 +170,7 @@ class Admission(models.Model):
         'Less than 3 days': 3,
         '3-7 days': 7,
         '7-14 days': 14,
-        'More than 14 days': 14,
+        'More than 14 days': 30,
     }
     ADMISSION_TYPE_CHOICES = [
         ('EMERGENCY', 'EMERGENCY'),
@@ -221,7 +221,7 @@ class Admission(models.Model):
     clinical_note = models.TextField(null=True, blank=True)
     icd_code = models.JSONField()
     admission_type = models.CharField(max_length=10, choices=ADMISSION_TYPE_CHOICES)
-    los_number = models.IntegerField(null=True, blank=True, default=3)
+    los_number = models.IntegerField(null=True, blank=True)
     los_lable = models.CharField(
         null=True, blank=True, max_length=20, choices=LOS_CHOICES)
     los_actual = models.IntegerField(null=True, blank=True, default=0)

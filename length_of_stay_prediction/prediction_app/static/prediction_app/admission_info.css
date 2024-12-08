@@ -71,3 +71,12 @@
     color: #202224;
     display: inline-block;
 }
+
+.admission-info {
+    background-color: white; 
+    padding: 10px; 
+    /* height: 40%;  */
+    margin-right: 20px; 
+    margin-left: 20px;
+    border-radius: 5px;
+}

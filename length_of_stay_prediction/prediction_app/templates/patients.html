@@ -16,12 +16,14 @@
 
 <div class="container">
     <h2>Patients List</h2>
+    {% if user.role == "admin" or user.role == "doctor"%}
     <div class="button-container">
         <form action="{% url 'create_new_patient' %}" method="get">
             {% csrf_token %}
             <button class="add-btn" type="submit">+ Add Patient</button>
         </form>
-    </div>  
+    </div> 
+    {% endif %} 
 
     <table id=patients class="patients-table">
         <thead>
