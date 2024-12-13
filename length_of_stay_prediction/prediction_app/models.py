@@ -222,9 +222,10 @@ class Admission(models.Model):
     icd_code = models.JSONField()
     admission_type = models.CharField(max_length=10, choices=ADMISSION_TYPE_CHOICES)
     los_number = models.IntegerField(null=True, blank=True)
-    los_lable = models.CharField(
+    los_label = models.CharField(
         null=True, blank=True, max_length=20, choices=LOS_CHOICES)
     los_actual = models.IntegerField(null=True, blank=True, default=0)
+    los_actual_label = models.CharField(max_length=50, blank=True, null=True)
     status = models.CharField(
         null=True, blank=True, max_length=15, choices=STATUS_CHOICES, default='In Treatment')
     admittime = models.DateTimeField(auto_now_add=True)
@@ -234,12 +235,22 @@ class Admission(models.Model):
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
 
     def save(self, *args, **kwargs):
-        if self.los_lable:
-            self.los_number = self.LOS_LABLE_TO_NUMBER.get(self.los_lable)
+        if self.los_label:
+            self.los_number = self.LOS_LABLE_TO_NUMBER.get(self.los_label)
         if self.admittime and self.los_number:
             self.dischtime_estimate = self.admittime + timedelta(days=self.los_number)
         elif self.admittime is None and self.los_number:
             self.dischtime_estimate = datetime.now() + timedelta(days=self.los_number)
+        if self.dischtime and self.admittime:
+            self.los_actual = (self.dischtime - self.admittime).days
+            if self.los_actual <= 3:
+                self.los_actual_label = 'Less than 3 days'
+            elif 3 < self.los_actual <= 7:
+                self.los_actual_label = '3-7 days'
+            elif 7 < self.los_actual <= 14:
+                self.los_actual_label = '7-14 days'
+            else:
+                self.los_actual_label = 'More than 14 days'
         super().save(*args, **kwargs)
 
 

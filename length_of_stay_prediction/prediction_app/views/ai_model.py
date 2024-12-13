@@ -13,45 +13,37 @@ class PerformanceChart(Chart):
     chart_type = 'bar'
 
     def get_datasets(self, **kwargs):
-        admissions = Admission.objects.filter(status='D')
+        admissions = Admission.objects.filter(status='Discharged')
 
         # Categorize records
-        short_term_actual = admissions.filter(los_actual__range=(0, 2), status='D').count()
-        medium_term_actual = admissions.filter(los_actual__range=(3, 6), status='D').count()
-        long_term_actual = admissions.filter(los_actual__gt=6, status='D').count()
+        cat1_actual = admissions.filter(los_actual_label='Less than 3 days', status='Discharged').count()
+        cat2_actual = admissions.filter(los_actual_label='3-7 days', status='Discharged').count()
+        cat3_actual = admissions.filter(los_actual_label='7-14 days', status='Discharged').count()
+        cat4_actual = admissions.filter(los_actual_label='More than 14 days', status='Discharged').count()
 
-        short_term_predicted = admissions.filter(los_category='S', status='D').count()
-        medium_term_predicted = admissions.filter(los_category='M', status='D').count()
-        long_term_predicted = admissions.filter(los_category='L', status='D').count()
+
+        cat1_predicted = admissions.filter(los_label='Less than 3 days', status='Discharged').count()
+        cat2_predicted = admissions.filter(los_label='3-7 days', status='Discharged').count()
+        cat3_predicted = admissions.filter(los_label='7-14 days', status='Discharged').count()
+        cat4_predicted = admissions.filter(los_label='More than 14 days', status='Discharged').count()
 
         return [
-            DataSet(label="Actual", data=[short_term_actual, medium_term_actual, long_term_actual], backgroundColor="rgba(75, 192, 192, 0.6)"),
-            DataSet(label="Predicted", data=[short_term_predicted, medium_term_predicted, long_term_predicted], backgroundColor="rgba(153, 102, 255, 0.6)")
+            DataSet(label="Actual", data=[cat1_actual, cat2_actual, cat3_actual, cat4_actual], backgroundColor="rgba(75, 192, 192, 0.6)"),
+            DataSet(label="Predicted", data=[cat1_predicted, cat2_predicted, cat3_predicted, cat4_predicted], backgroundColor="rgba(153, 102, 255, 0.6)")
         ]
 
     def get_axes(self, **kwargs):
         return [
-            Axes(type='category', labels=['Short-term', 'Medium-term', 'Long-term']),
+            Axes(type='category', labels=['Less than 3 days', '3-7 days', '7-14 days', '14+ days']),
             Axes(type='linear', position='left')
         ]
 
 def ai_model_view(request):
     try:
         # Calculate accuracy based on Admission records
-        total_discharged = Admission.objects.filter(status='D').count()
-        correct_category_predictions = 0
-        for admission in Admission.objects.filter(status='D'):
-            if admission.los_actual <= 2:
-                category_actual = 'S'
-            elif admission.los_actual <= 6:
-                category_actual = 'M'
-            else:
-                category_actual = 'L'
-
-            if category_actual == admission.los_category:
-                correct_category_predictions += 1
-
-        accuracy = (correct_category_predictions / total_discharged) * 100 if total_discharged > 0 else None
+        total_discharged = Admission.objects.filter(status='Discharged').count()
+        correct_label_predictions = Admission.objects.filter(status='Discharged').filter(los_label=F('los_actual_label')).count()
+        accuracy = (correct_label_predictions / total_discharged) * 100 if total_discharged > 0 else None
 
         # Number of samples is the number of discharged records
         num_samples = total_discharged
