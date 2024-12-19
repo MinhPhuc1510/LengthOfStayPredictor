@@ -5,6 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from prediction_app.forms import AddNewAdmission
 from django.contrib import messages
 from django.db.models import Q, Count, F
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+
 import logging
 
 @permission_classes([IsAuthenticated])
@@ -22,8 +26,12 @@ def add_new_admission(request, id):
         # print(form.errors)
         if form.is_valid():
             try:
-                form.save()
+                admission = form.save()
                 messages.success(request, 'Sent admission request Successfully!')
+
+                admission.los_label = "7-14 days"
+                admission.save()
+                return HttpResponseRedirect(reverse('get_admission_info', args=[id, admission.hadm_id]))
             except Exception as e:
                 logging.error(f'Error saving: {e}')
                 return render(request, 'add_new_admission.html', {'error_message': 'Error saving', 'patient':patient, "rooms": rooms, 'form': form})

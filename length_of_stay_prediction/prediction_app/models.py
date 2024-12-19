@@ -44,11 +44,6 @@ class User(AbstractBaseUser):
     role = models.CharField(
         max_length=10, choices=ROLE_CHOICES, default='admin')
 
-    email = models.EmailField(
-        verbose_name="email address",
-        max_length=255,
-        unique=True,
-    )
     date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
@@ -137,7 +132,7 @@ class Patient(models.Model):
         ('UNKNOWN/NOT SPECIFIED  ', 'UNKNOWN/NOT SPECIFIED '),
         ('OTHER', 'OTHER'),
     ]
-
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     age = models.PositiveIntegerField()

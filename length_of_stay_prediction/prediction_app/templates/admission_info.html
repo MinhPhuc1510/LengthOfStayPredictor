@@ -21,16 +21,21 @@
 </div>
 <div class="admission-info">
     <div class="los">
-        <form method="post" action="{% url 'update_admission_los_lable' id=patient.id admission_id=admission.hadm_id %}">
+        {% if user.role == "patient" %}
+        <label for="Los">Length Of Stay: {{admission.los_label}} </label>
+        {% else %}
+        <form method="post" action="{% url 'update_admission_los_label' id=patient.id admission_id=admission.hadm_id %}">
             {% csrf_token %}
             <label for="Los">Length Of Stay:</label>
-            <select id="Los" name="los_lable" onchange="this.form.submit()">
-                <option value="Less than 3 days" {% if admission.los_lable == 'Less than 3 days' %}selected{% endif %}>Less than 3 days</option>
-                <option value="3-7 days" {% if admission.los_lable == '3-7 days' %}selected{% endif %}>3-7 days</option>
-                <option value="7-14 days" {% if admission.los_lable == '7-14 days' %}selected{% endif %}>7-14 days</option>
-                <option value="More than 14 days" {% if admission.los_lable == 'More than 14 days' %}selected{% endif %}>More than 14 days</option>
+            <select id="Los" name="los_label" onchange="this.form.submit()">
+                <option value="Less than 3 days" {% if admission.los_label == 'Less than 3 days' %}selected{% endif %}>Less than 3 days</option>
+                <option value="3-7 days" {% if admission.los_label == '3-7 days' %}selected{% endif %}>3-7 days</option>
+                <option value="7-14 days" {% if admission.los_label == '7-14 days' %}selected{% endif %}>7-14 days</option>
+                <option value="More than 14 days" {% if admission.los_label == 'More than 14 days' %}selected{% endif %}>More than 14 days</option>
             </select>
         </form>
+        {% endif %}
+
     </div>
     <div class="slider-container">
         <div class="slider-labels">
@@ -42,7 +47,9 @@
         <div class="slider-status">
             <span id="statusLabel">Remaining Days: 0 </span>
         </div>
+        {% if user.role != "patient" %}
         <button style="background-color: #007bff; margin-top: 1rem;" onclick="window.location.href='{% url 'update_admission_discharged_status' id=patient.id admission_id=admission.hadm_id %}'" type="button" class="add-btn">Discharge Requset</button>
+        {% endif %}
     </div>
 </div>
 
