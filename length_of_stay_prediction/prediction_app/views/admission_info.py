@@ -26,13 +26,14 @@ def update_admission_discharged_status(request, id, admission_id):
     return render(request,'admission_info.html', {'admission': admission, 'patient': patient, 'duaration': admission.los_number})
 
 @permission_classes([IsAuthenticated])
-def update_admission_los_lable(request, id, admission_id):
+def update_admission_los_label(request, id, admission_id):
     patient = Patient.objects.get(id=id)
     admission = patient.admission_set.filter(hadm_id=admission_id).first()
     duaration = 0
     if request.method == "POST":
-        los_lable = request.POST.get("los_lable")
-        admission.los_lable = los_lable
+        los_label = request.POST.get("los_label")
+        print(los_label)
+        admission.los_label = los_label
         admission.save()
         print(admission.dischtime)
         if admission.dischtime:

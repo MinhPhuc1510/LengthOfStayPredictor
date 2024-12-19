@@ -19,7 +19,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "email", "date_of_birth", "role"]
+        fields = ["username", "date_of_birth", "role"]
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -48,7 +48,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields =  ['username', 'email', 'role']
+        fields =  ['username', 'role']
 
 
 class UserAdmin(BaseUserAdmin):
@@ -59,10 +59,10 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ["username", "email", "date_of_birth", "role"]
+    list_display = ["username", "date_of_birth", "role"]
     list_filter = ["role"]
     fieldsets = [
-        (None, {"fields": ["username", "email", "password"]}),
+        (None, {"fields": ["username", "password"]}),
         ("Personal info", {"fields": ["date_of_birth"]}),
         ("Permissions", {"fields": ["role"]}),
     ]
@@ -73,7 +73,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ["wide"],
-                "fields": ["username", "email", "date_of_birth", "password1", "password2", "role"],
+                "fields": ["username", "date_of_birth", "password1", "password2", "role"],
             },
         ),
     ]
