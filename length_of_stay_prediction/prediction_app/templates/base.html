@@ -42,9 +42,15 @@
                 {% endblock %}
 
                 {% block patients %}
+                {% if user.role == "patient" %}
+                <div class="Patients">
+                    <a href="{% url 'get_patient_info' user.patient.id %}"> <i class="fas fa-user"></i> Patients</a>
+                </div>
+                {% else %}
                 <div class="Patients">
                     <a href="{% url 'get_patients' %}"> <i class="fas fa-user"></i> Patients</a>
                 </div>
+                {% endif %}
                 {% endblock %}
 
                 {% if user.role == "admin" or user.role == "doctor"%}

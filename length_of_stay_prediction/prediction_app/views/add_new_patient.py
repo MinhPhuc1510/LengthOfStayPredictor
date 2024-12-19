@@ -1,8 +1,11 @@
+import django
 from django.shortcuts import render
 from prediction_app.forms import AddNewPatientForm
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
+from ..models import User
+from django.contrib.auth.hashers import make_password
 
 
 import logging
@@ -22,6 +25,19 @@ def create_patient(request):
             calculated_age = today.year - dob.year - \
                 ((today.month, today.day) < (dob.month, dob.day))
             data['age'] = calculated_age
+        
+        try:
+            user = User.objects.create(**{
+                "username": f'{data["first_name"]} {data["last_name"]}',
+                "role": "patient",
+                "date_of_birth": dob,
+                "is_active": True,
+                "password": make_password(f'{data["first_name"]} {data["last_name"]}')
+            })
+        except django.db.utils.IntegrityError:
+            logging.error('user is already registered')
+            return render(request, 'add_new_patient.html', {'error_message': 'user is already registered'})
+        data['user'] = user
 
         form = AddNewPatientForm(data)
         # print(form.errors)

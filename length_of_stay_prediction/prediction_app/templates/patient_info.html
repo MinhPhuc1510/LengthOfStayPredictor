@@ -59,17 +59,20 @@
     {% block content %}
     <div style="margin-bottom: 1.5rem;" class="row">
         <h2 style="margin-right: 2rem;">Admissions</h2>
+        {% if user.role != 'patient' %}
         <form action="{% url 'get_patients' %}" method="get">
             {% csrf_token %}
             <button style="background-color: #007bff;" class="add-btn" type="submit"> Back to List</button>
         </form>
-
+        {% endif %}
         {% if alow_admission_request %}
+        {% if user.role != 'patient' %}
         <form style="margin-right: 3rem;" class="ml-auto" action="{% url 'add_new_admission' patient.id %}"
             method="get">
             {% csrf_token %}
             <button style="background-color: #007bff" class="add-btn" type="submit"> + New Admission</button>
         </form>
+        {% endif %}
         {% endif %}
     </div>
     <table id=patients class="patients-table" , style="background-color: white;">
