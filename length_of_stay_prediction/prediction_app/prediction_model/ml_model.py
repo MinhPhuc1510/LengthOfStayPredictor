@@ -192,7 +192,7 @@ class LosModel:
         print(f"Selected Best Pipeline: {selected_pipe_name}")
 
         self.new_train_pipe = best_pipes[selected_pipe_name]
-        return tuned_table
+        return best_method["Accuracy"][tuned_table["Accuracy"].argmax()] # float: 0.419653
 
     def approve_model(self):
         self.__save_model()
