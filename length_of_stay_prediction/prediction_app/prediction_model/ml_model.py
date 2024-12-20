@@ -48,7 +48,7 @@ class LosModel:
         self.selected_pipe = None
         self.new_train_pipe = None
 
-    def load_model(self, model_file="../checkpoints/RandomForestClassifier.bin", text_embedding_model_path="../checkpoints/checkpoint-2286"):
+    def load_model(self, model_file="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/RandomForestClassifier.bin", text_embedding_model_path="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/checkpoint-2286"):
         # Load embedding model
         print(f"Text Embedding Model loaded from {text_embedding_model_path}")
         self.text_embedding_model = AutoModel.from_pretrained(text_embedding_model_path)

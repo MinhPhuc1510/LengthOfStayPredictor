@@ -34,7 +34,7 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Less than 3 days' , '3-7 days', '7-14 days', '+14 days'],
+            labels: ['Less than 3 days' , '3-7 days', '7-14 days', '14+ days'],
             datasets: chartData
         },
         options: {
@@ -44,42 +44,81 @@
         }
     });
 </script>
-<button id="retrainButton">Re-train Model</button>
+<button id="retrainButton" onclick="showPopup('fileUploadModal')">Re-train Model</button>
 <div id="fileUploadModal" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <form id="fileUploadForm" method="post" enctype="multipart/form-data">
-      <input type="file" name="trainingFile" required>
-      <button type="submit">Submit</button>
+    <span class="close" onclick="closePopup('fileUploadModal')">&times;</span>
+    <div>Choose a date range of Discharged Patients to add to the model:</div>
+    <form id="retrainForm" method="POST" action="{% url 'retrain_model' %}">
+        {% csrf_token %}
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+        
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+        
+        <button type="submit">Submit</button>
     </form>
   </div>
 </div>
+
+  <!-- Popup for no records found -->
+<div id="noRecordsPopup" class="modal" style="display: none;">
+  <div class="modal-content">
+      <span class="close" onclick="closePopup('noRecordsPopup')">&times;</span>
+      <p>No records found for the selected date range.</p>
+  </div>
+</div>
+
+<!-- Popup for in-progress -->
+<div id="loadingPopup" class="modal" style="display: none;">
+    <div class="modal-content">
+        <p>Training in progress...</p>
+    </div>
+</div>
+
+<!-- Popup for success -->
+<div id="successPopup" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closePopup('successPopup')">&times;</span>
+        <p>Model retrained successfully!</p>
+    </div>
+</div>
+
+
 <script>
-    // Get the modal
-    var modal = document.getElementById("fileUploadModal");
+  function showPopup(popupId) {
+      document.getElementById(popupId).style.display = 'block';
+  }
 
-    // Get the button that opens the modal
-    var btn = document.getElementById("retrainButton");
+  function closePopup(popupId) {
+      document.getElementById(popupId).style.display = 'none';
+  }
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+  // Handle form submission
+  document.getElementById('retrainForm').onsubmit = function(event) {
+      event.preventDefault();  // Prevent default form submission
+      showPopup('loadingPopup');  // Show loading popup
 
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
+      const formData = new FormData(this);
+      fetch(this.action, {
+          method: 'POST',
+          body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+          closePopup('loadingPopup');  // Close loading popup
+          if (data.error) {
+              showPopup('noRecordsPopup');  // Show no records found popup
+          } else {
+              showPopup('successPopup');  // Show success popup
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          closePopup('loadingPopup');  // Close loading popup on error
+      });
+  };
 </script>
 
 {% endblock %}

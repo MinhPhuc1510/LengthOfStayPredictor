@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 from django.shortcuts import render
 from django.http import JsonResponse
 from prediction_app.models import AIModelStats, Admission
@@ -6,8 +8,15 @@ from django.db.models import F
 from jchart import Chart
 from jchart.config import Axes, DataSet
 import json
+from prediction_app.prediction_model.ml_model import LosModel
 
 # View for AI Model
+LOS_LABLE_TO_ID = {
+    'Less than 3 days': 0,
+    '3-7 days': 1,
+    '7-14 days': 2,
+    'More than 14 days': 3,
+}
 
 class PerformanceChart(Chart):
     chart_type = 'bar'
@@ -98,9 +107,41 @@ def ai_model_view(request):
 # Endpoint to handle file upload for re-training
 
 def retrain_model(request):
-    if request.method == 'POST' and request.FILES['trainingFile']:
-        training_file = request.FILES['trainingFile']
-        # Handle file upload and initiate re-training
-        # For now, just return a success response
-        return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'failed'})
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        # Query Admission records based on discharge date within the specified range
+        admissions = Admission.objects.filter(dischtime__range=[start_date, end_date]).select_related('subject')
+
+        if not admissions.exists():
+            return JsonResponse({'error': 'No records found for the selected date range.'})
+
+        # Prepare the data for training
+        data = []
+        label = []
+        for admission in admissions:
+            patient = admission.subject
+            data.append({
+                "TEXT": admission.clinical_note,
+                "DIAGNOSIS": admission.diagnose,
+                "GENDER": patient.gender,
+                "ADMISSION_TYPE": admission.admission_type,
+                "INSURANCE": admission.insurance,
+                "RELIGION": patient.religion,
+                "ETHNICITY": patient.ethnicity,
+                "MARITAL_STATUS": patient.marital_status,
+                "AGE": patient.age,
+                "FIRST_CAREUNIT": "ICU"
+            })
+            label.append(LOS_LABLE_TO_ID[admission.los_actual_label])
+
+        df = pd.DataFrame(data)
+        # df_label = pd.DataFrame(label)
+        y = np.array(label)
+        # Instantiate the model and train it
+        los_model = LosModel().load_model(model_file="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/RandomForestClassifier.bin", text_embedding_model_path="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/checkpoint-2286")
+        los_model.train(df, y)  
+        los_model.approve_model() 
+
+        return JsonResponse({'success': 'Model retrained successfully.'})
