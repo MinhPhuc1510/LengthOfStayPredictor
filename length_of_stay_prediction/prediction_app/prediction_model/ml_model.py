@@ -110,7 +110,7 @@ class LosModel:
         text_inputs = self.__tokenization(X["TEXT"])
         with torch.no_grad():  # Disable gradient calculation for inference
             outputs = self.text_embedding_model(**text_inputs)
-        text_vector = outputs.pooler_output.flatten().numpy()
+        text_vector = outputs.pooler_output.flatten().cpu().numpy()
 
         # Tabular features
         dia_vector = self.__encode(X["DIAGNOSIS"], DIAGNOSIS)
