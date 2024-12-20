@@ -8,7 +8,7 @@
   <div class="stat">
     <h3>Accuracy</h3>
     <img src="{% static 'prediction_app/icons/accuracy.png' %}" alt="Accuracy Icon">
-    <p class="value">{{ accuracy }}%</p>
+    <p class="value">{{ formatted_accuracy }}%</p>
     <p class="change" style="color: {{ change_color }};">{{ accuracy_change }} from last model</p>
   </div>
   <div class="stat">

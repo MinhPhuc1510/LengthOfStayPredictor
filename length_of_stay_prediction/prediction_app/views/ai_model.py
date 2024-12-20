@@ -9,7 +9,7 @@ from jchart import Chart
 from jchart.config import Axes, DataSet
 import json
 from prediction_app.prediction_model.ml_model import LosModel
-
+from datetime import datetime
 # View for AI Model
 LOS_LABLE_TO_ID = {
     'Less than 3 days': 0,
@@ -53,7 +53,7 @@ def ai_model_view(request):
         total_discharged = Admission.objects.filter(status='Discharged').count()
         correct_label_predictions = Admission.objects.filter(status='Discharged').filter(los_label=F('los_actual_label')).count()
         accuracy = (correct_label_predictions / total_discharged) * 100 if total_discharged > 0 else None
-
+        formatted_accuracy = f"{accuracy:.2f}" if accuracy is not None else "N/A"
         # Number of samples is the number of discharged records
         num_samples = total_discharged
 
@@ -86,6 +86,7 @@ def ai_model_view(request):
 
         context = {
             'accuracy': accuracy,
+            'formatted_accuracy': formatted_accuracy,
             'accuracy_change': accuracy_change_display,
             'change_color': change_color,
             'num_samples': num_samples,
@@ -96,6 +97,7 @@ def ai_model_view(request):
         # If no stats exist, provide default values
         context = {
             'accuracy': 'N/A',
+            'formatted_accuracy': 'N/A',
             'accuracy_change': 'N/A',
             'change_color': 'black',
             'num_samples': 'N/A',
@@ -140,8 +142,24 @@ def retrain_model(request):
         # df_label = pd.DataFrame(label)
         y = np.array(label)
         # Instantiate the model and train it
-        los_model = LosModel().load_model(model_file="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/RandomForestClassifier.bin", text_embedding_model_path="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/checkpoint-2286")
+        los_model = LosModel().load_model()
         los_model.train(df, y)  
         los_model.approve_model() 
 
+        # Calculate accuracy
+        total_discharged = Admission.objects.filter(status='Discharged').count()
+        correct_label_predictions = Admission.objects.filter(status='Discharged').filter(los_label=F('los_actual_label')).count()
+        accuracy = (correct_label_predictions / total_discharged) * 100 if total_discharged > 0 else None
+        num_samples = total_discharged
+
+        # Update the latest AIModelStats record
+        latest_stats = AIModelStats.objects.latest('id')
+        latest_stats.accuracy = accuracy / 100
+        latest_stats.num_samples = num_samples
+        latest_stats.save()
+
+        # Insert a new record in AIModelStats
+        AIModelStats.objects.create(
+            last_training_time=datetime.now()  # Ensure to import datetime
+        )
         return JsonResponse({'success': 'Model retrained successfully.'})
