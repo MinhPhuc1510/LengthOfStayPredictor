@@ -47,10 +47,8 @@ def add_new_admission(request, id):
                     "FIRST_CAREUNIT": "ICU"  # Assuming default value
                 }
                 X_input = pd.Series(X)
-                print(X_input)
                 los_model = LosModel().load_model()  # Load your model
                 predicted_los_label = los_model.predict(X_input)
-                print(predicted_los_label)
                 admission.los_label = LOS_ID_TO_LABEL[predicted_los_label[0]]
                 # admission.los_label = "7-14 days"
                 admission.save()
