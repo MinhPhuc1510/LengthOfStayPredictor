@@ -14,6 +14,17 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
 from transformers import AutoTokenizer, AutoModel
+import os
+
+def singleton(cls):
+    instances = {}
+
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+
+    return get_instance
 
 GENDER = ['M', 'F']
 ADMISSION_TYPE = ["EMERGENCY", "NEWBORN", "ELECTIVE", "URGENT"]
@@ -43,13 +54,14 @@ DIAGNOSIS = ['viral_pneumonia',
              'other_specified_organism_pneumonia', 
              'bronchopneumonia_unspecified',
             'unspecified_pneumonia']
+@singleton
 class LosModel:
     def __init__(self):
         self.selected_pipe = None
         self.new_train_pipe = None
+        self.current_directory = os.getcwd()
 
-    def load_model(self, model_file="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/RandomForestClassifier.bin", text_embedding_model_path="/zserver/python-projects/LengthOfStayPredictor/length_of_stay_prediction/prediction_app/checkpoints/checkpoint-2286"):
-        # Load embedding model
+    def load_model(self, model_file=os.path.join(os.getcwd(), "prediction_app", "checkpoints", "RandomForestClassifier.bin"), text_embedding_model_path=os.path.join(os.getcwd(),  "prediction_app", "checkpoints", "checkpoint-2286")):
         print(f"Text Embedding Model loaded from {text_embedding_model_path}")
         self.text_embedding_model = AutoModel.from_pretrained(text_embedding_model_path)
         self.tokenizer = AutoTokenizer.from_pretrained(text_embedding_model_path)

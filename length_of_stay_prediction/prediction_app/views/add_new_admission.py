@@ -29,7 +29,7 @@ def add_new_admission(request, id):
         # print(data)
 
         form = AddNewAdmission(data)
-        # print(form.errors)
+        print(form.errors)
         if form.is_valid():
             try:
                 admission = form.save()
@@ -44,7 +44,7 @@ def add_new_admission(request, id):
                     "ETHNICITY": patient.ethnicity,
                     "MARITAL_STATUS": patient.marital_status,
                     "AGE": patient.age,
-                    "FIRST_CAREUNIT": "ICU"  # Assuming default value
+                    "FIRST_CAREUNIT": admission.first_careunit  # Assuming default value
                 }
                 X_input = pd.Series(X)
                 los_model = LosModel().load_model()  # Load your model

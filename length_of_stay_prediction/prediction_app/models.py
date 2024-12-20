@@ -115,12 +115,9 @@ class Patient(models.Model):
     ]
 
     RELIGION_CHOICES = [
-        ('CATHOLIC', 'CATHOLIC'),                 
-        ('PROTESTANT QUAKER', 'PROTESTANT QUAKER'),
-        ('UNOBTAINABLE', 'UNOBTAINABLE'),
-        ('JEWISH', 'JEWISH'),
+        ('RELIGIOUS', 'RELIGIOUS'),                 
         ('NOT SPECIFIED', 'NOT SPECIFIED'),
-        ('OTHER', 'OTHER'),
+        ('UNOBTAINABLE', 'UNOBTAINABLE'),
     ]
 
     ETHNICITY_CHOICES = [
@@ -128,9 +125,7 @@ class Patient(models.Model):
         ('BLACK/AFRICAN AMERICAN', 'BLACK/AFRICAN AMERICAN'),
         ('HISPANIC OR LATINO', 'HISPANIC OR LATINO'),
         ('ASIAN', 'ASIAN'),
-        ('UNABLE TO OBTAIN', 'UNABLE TO OBTAIN'),
-        ('UNKNOWN/NOT SPECIFIED  ', 'UNKNOWN/NOT SPECIFIED '),
-        ('OTHER', 'OTHER'),
+        ('OTHER/UNKNOWN', 'OTHER/UNKNOWN'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
@@ -171,6 +166,7 @@ class Admission(models.Model):
         ('EMERGENCY', 'EMERGENCY'),
         ('ELECTIVE', 'ELECTIVE'),
         ('URGENT', 'URGENT'),
+        ('NEWBORN', 'NEWBORN'),
     ]
     LOS_CHOICES = [
         ('Less than 3 days', 'Less than 3 days'),
@@ -189,33 +185,17 @@ class Admission(models.Model):
         ('Government', 'Government'),
         ('Self Pay', 'Self Pay')
     ]
-    ICD_CODE = [
-        ('0', ' infectious and parasitic diseases'),
-        ('1', ' neoplasms'),
-        ('2', ' endocrine, nutritional and metabolic diseases, and immunity disorders'),
-        ('3', ' diseases of the blood and blood-forming organs'),
-        ('4', ' mental disorders'),
-        ('5', ' diseases of the nervous system and sense organs'),
-        ('6', ' diseases of the circulatory system'),
-        ('7', ' diseases of the respiratory system'),
-        ('8', ' diseases of the digestive system'),
-        ('9', ' diseases of the genitourinary system'),
-        ('10', ' complications of pregnancy, childbirth, and the puerperium'),
-        ('11', ' diseases of the skin and subcutaneous tissue'),
-        ('12', ' diseases of the musculoskeletal system and connective tissue'),
-        ('13', ' congenital anomalies'),
-        ('14', ' certain conditions originating in the perinatal period'),
-        ('15', ' symptoms, signs, and ill-defined conditions'),
-        ('16', ' injury and poisoning'),
+    FIRST_CAREUNIT = [
+        ("ICU", "ICU"),
+        ("NICU", "NICU"),
     ]
-
     hadm_id = models.BigAutoField(primary_key=True)
     subject = models.ForeignKey(Patient, on_delete=models.CASCADE)
     insurance = models.TextField(max_length=10, choices=INSURANCE_CHOICES)
-    diagnose = models.TextField()
+    diagnose = models.JSONField()
     clinical_note = models.TextField(null=True, blank=True)
-    icd_code = models.JSONField()
     admission_type = models.CharField(max_length=10, choices=ADMISSION_TYPE_CHOICES)
+    first_careunit = models.TextField(max_length=4, choices=FIRST_CAREUNIT)
     los_number = models.IntegerField(null=True, blank=True)
     los_label = models.CharField(
         null=True, blank=True, max_length=20, choices=LOS_CHOICES)

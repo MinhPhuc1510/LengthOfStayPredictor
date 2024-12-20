@@ -71,13 +71,13 @@
 			<div class="row">
 				<div class="col-4">
 					<label for="diagnose">Diagnose</label>
-					<input type="text" id="diagnose" name="diagnose" placeholder="Enter patient's diagnose" required>
-				</div>
-				<div class="col-4">
-					<label for="icd-code">ICD-Code</label>
-					{{ form.icd_code }}
+					{{ form.diagnose }}
 				</div>
 				<div class="col-2">
+					<label for="icd-code">First Careunit</label>
+					{{ form.first_careunit }}
+				</div>
+				<div class="col-3">
 					<label for="room">Room</label>
 					<select id="room" name="room" required>
 						{% for room in rooms %}
@@ -85,7 +85,7 @@
 						{% endfor %}
 					</select>
 				</div>
-				<div class="col-2">
+				<div class="col-3">
 					<label for="insurance">Insurance</label>
 						{{ form.insurance }}
 				</div>
