@@ -142,7 +142,7 @@ def retrain_model(request):
         # df_label = pd.DataFrame(label)
         y = np.array(label)
         # Instantiate the model and train it
-        los_model = LosModel().load_model()
+        los_model = LosModel()
         los_model.train(df, y)  
         los_model.approve_model() 
 
