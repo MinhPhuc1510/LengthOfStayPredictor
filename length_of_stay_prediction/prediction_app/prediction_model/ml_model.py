@@ -2,6 +2,7 @@ import itertools
 import pickle
 import numpy as np
 import pandas as pd
+import torch
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
@@ -12,6 +13,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+from transformers import AutoTokenizer, AutoModel
 
 GENDER = ['M', 'F']
 ADMISSION_TYPE = ["EMERGENCY", "NEWBORN", "ELECTIVE", "URGENT"]
@@ -35,19 +37,31 @@ AGE_RANGES = {"newborn": (0, 13),
               "senior": (56, 100)}
 FIRST_CAREUNIT = ["ICU", "NICU"]
 RELIGION = ["RELIGIOUS", "NOT SPECIFIED", "UNOBTAINABLE"]
-DIAGNOSIS = ['blood', 'circulatory', 'congenital', 'digestive', 'endocrine',
-       'genitourinary', 'infectious', 'injury', 'mental', 'misc', 'muscular',
-       'neoplasms', 'nervous', 'pregnancy', 'prenatal', 'respiratory', 'skin']
+DIAGNOSIS = ['viral_pneumonia', 
+             'pneumococcal_pneumonia', 
+             'bacterial_pneumonia', 
+             'other_specified_organism_pneumonia', 
+             'bronchopneumonia_unspecified',
+            'unspecified_pneumonia']
 class LosModel:
     def __init__(self):
         self.selected_pipe = None
         self.new_train_pipe = None
 
-    def load_model(self, model_file="tabular_best_pipe.bin"):
+    def load_model(self, model_file="../checkpoints/RandomForestClassifier.bin", text_embedding_model_path="../checkpoints/checkpoint-2286"):
+        # Load embedding model
+        print(f"Text Embedding Model loaded from {text_embedding_model_path}")
+        self.text_embedding_model = AutoModel.from_pretrained(text_embedding_model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(text_embedding_model_path)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.text_embedding_model.to(device)
+        print(f"Using device for embedding: {self.text_embedding_model.device}")
+
+        # Load classifier model
         self.model_file = model_file
         with open(self.model_file, 'rb') as file:
             self.selected_pipe = pickle.load(file)
-        print(f"Model loaded from {self.model_file}")
+        print(f"Classifier Model loaded from {self.model_file}")
         return self
 
     @staticmethod
@@ -63,17 +77,35 @@ class LosModel:
             vector = lb.transform([x]).flatten()
         return vector
     
+    def __tokenization(self, texts):
+        max_tokens_limit = 512
+        tokenize_data = self.tokenizer(texts)
+        tokenize_data["attention_mask"] = tokenize_data["attention_mask"] if len(tokenize_data["attention_mask"]) <= max_tokens_limit else tokenize_data["attention_mask"][:max_tokens_limit-1] + tokenize_data["attention_mask"][-1:]
+        tokenize_data["input_ids"] = tokenize_data["input_ids"] if len(tokenize_data["input_ids"]) <= max_tokens_limit else tokenize_data["input_ids"][:max_tokens_limit-1] + tokenize_data["input_ids"][-1:]
+        tokenize_data["token_type_ids"] = tokenize_data["token_type_ids"] if len(tokenize_data["token_type_ids"]) <= max_tokens_limit else tokenize_data["token_type_ids"][:max_tokens_limit-1] + tokenize_data["token_type_ids"][-1:]
+        return {
+            'input_ids': torch.IntTensor([tokenize_data['input_ids']]),
+            'token_type_ids': torch.IntTensor([tokenize_data['token_type_ids']]),
+            'attention_mask': torch.IntTensor([tokenize_data['attention_mask']])
+        }
+
     @staticmethod
     def __age_to_category(age):
         return next((cat for cat, (start, end) in AGE_RANGES.items() if start <= age < end), "senior")
 
     def __preprocess(self, X:pd.Series):
+        # Text features
+        text_inputs = self.__tokenization(X["TEXT"])
+        with torch.no_grad():  # Disable gradient calculation for inference
+            outputs = self.text_embedding_model(**text_inputs)
+        text_vector = outputs.pooler_output.flatten().numpy()
+
+        # Tabular features
         dia_vector = self.__encode(X["DIAGNOSIS"], DIAGNOSIS)
         gender_vector = self.__encode(X["GENDER"], GENDER)
         type_vector = self.__encode(X["ADMISSION_TYPE"], ADMISSION_TYPE)
         insurance_vector = self.__encode(X["INSURANCE"], INSURANCE)
         rel_vector = self.__encode(X["RELIGION"], RELIGION)
-
         ethnicity_vector = self.__encode(X["ETHNICITY"], ETHNICITY)
         marital_vector = self.__encode(X["MARITAL_STATUS"], MARITAL_STATUS)
         age_vector = self.__encode(self.__age_to_category(X["AGE"]), AGE)
@@ -92,8 +124,9 @@ class LosModel:
 
         # Concatenate all vectors
         X = np.concatenate(
-            [
+            [   
                 dia_vector, 
+                text_vector,  
                 gender_vector, 
                 careunit_vector,
                 type_vector, 
@@ -102,11 +135,16 @@ class LosModel:
                 ethnicity_vector, 
                 age_vector,
                 marital_vector,
-                rel_vector      
             ]
         )
         
         return X
+    
+    def __preprocess_batch(self, df: pd.DataFrame):
+        processed_data = []
+        for _, row in df.iterrows():
+            processed_data.append(self.__preprocess(row))
+        return np.array(processed_data)
 
     def predict(self, X: pd.Series):
         X = self.__preprocess(X).reshape(1, -1)
@@ -119,35 +157,36 @@ class LosModel:
     # Functions for Training
     def __init_train_pipeline(self):
         # Define methods for scaling, reducing, normalizing, and classifying
-        self.scalers = {"MinMaxScaler": MinMaxScaler()}
-        self.reducers = {"PCA": PCA()}
-        self.normalizers = {"Normalization": MinMaxScaler()}
-        self.classifiers = {
-            "MultinomialNB": MultinomialNB(),
+        scalers = {
+            "MinMaxScaler": MinMaxScaler(),
+        }
+        reducers = {
+            'PCA': PCA()
+        }
+
+        # Define methods for classifying samples
+        classifiers = {
             "RandomForestClassifier": RandomForestClassifier(),
-            "LogisticRegression": LogisticRegression(max_iter=2000, solver='saga'),
-            "SVC": SVC(max_iter=1000),
         }
 
         self.pipe_steps = [
-            ('scaler', self.scalers),
-            ('reducers', self.reducers),
-            ('normalizers', self.normalizers),
-            ('classifier', self.classifiers),
+            ('scaler', scalers), # skip this step due to feature already normalized
+            ('reducers', reducers),
+            ('classifier', classifiers)
         ]
 
+        # Define parameters for each method
         self.parameters = {
             "PCA__n_components": [0.95, 0.90],
-            "LogisticRegression__C": [0.01, 0.1, 1, 10],
-            "SVC__kernel": ['rbf', 'linear'],
-            "SVC__C": [0.1, 1, 10],
-            "MultinomialNB__alpha": [0.01, 0.1],
-            "MultinomialNB__fit_prior": [True, False],
             "RandomForestClassifier__n_estimators": [100, 200],
             "RandomForestClassifier__max_depth": [10, 20, None],
+            "RandomForestClassifier__class_weight": ["balanced", "balanced_subsample"],
+            "RandomForestClassifier__criterion": ["gini", "entropy", "log_loss"],
         }
-    
+
     def train(self, X_train:pd.DataFrame, y_train:pd.Series):
+        X_train = self.__preprocess_batch(X_train)
+        print(X_train.shape, y_train.shape)
         self.__init_train_pipeline()
         print("Generating pipelines...")
         pipe_config = [list(step.items()) for _, step in self.pipe_steps]
