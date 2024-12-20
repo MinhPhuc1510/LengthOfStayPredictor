@@ -14,7 +14,7 @@ def get_patient_info(request, id):
         if admission.los_number is not None:
             duaration = (now() - admission.admittime).days
             if duaration >= admission.los_number:
-                admission.status = 'Dischagred'
+                admission.status = 'Discharged'
             admission.save()
 
     allow_admission_request = admissions.filter(status="In Treatment").count() == 0
