@@ -8,3 +8,4 @@ Include/
 
 venv
 length_of_stay_prediction/prediction_app/checkpoints/checkpoint-2286/*
+length_of_stay_prediction/prediction_app/checkpoints/RandomForestClassifier.bin
