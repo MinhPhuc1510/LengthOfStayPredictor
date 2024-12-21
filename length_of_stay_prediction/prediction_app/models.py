@@ -196,7 +196,7 @@ class Admission(models.Model):
     clinical_note = models.TextField(null=True, blank=True)
     admission_type = models.CharField(max_length=10, choices=ADMISSION_TYPE_CHOICES)
     first_careunit = models.TextField(max_length=4, choices=FIRST_CAREUNIT)
-    los_number = models.IntegerField(null=True, blank=True)
+    los_number = models.IntegerField(null=True, blank=True, default=3)
     los_label = models.CharField(
         null=True, blank=True, max_length=20, choices=LOS_CHOICES)
     los_actual = models.IntegerField(null=True, blank=True, default=0)
