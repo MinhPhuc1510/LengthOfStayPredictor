@@ -108,6 +108,7 @@ class LosModel:
     def __preprocess(self, X:pd.Series):
         # Text features
         text_inputs = self.__tokenization(X["TEXT"])
+        text_inputs = {key: value.to(self.text_embedding_model.device) for key, value in text_inputs.items()}
         with torch.no_grad():  # Disable gradient calculation for inference
             outputs = self.text_embedding_model(**text_inputs)
         text_vector = outputs.pooler_output.flatten().cpu().numpy()
