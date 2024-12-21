@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
 from ..models import User
 from django.contrib.auth.hashers import make_password
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 import logging
@@ -43,11 +45,12 @@ def create_patient(request):
         # print(form.errors)
         if form.is_valid():
             try:
-                form.save()
+                patient = form.save()
                 messages.success(request, 'Created Patient Successfully!')
-            except:
-                logging.error('Error saving')
-                return render(request, 'add_new_patient.html', {'error_message': 'Error saving'})
+                return HttpResponseRedirect(reverse('get_patient_info', args=[patient.id]))
+            except Exception as e:
+                logging.error('Error saving', e)
+                return render(request, 'add_new_patient.html', {'error_message': 'Error saving', 'form': form})
         else:
             return render(request, 'add_new_patient.html', {'form': form, 'error_message': 'Invalid input.'})
     elif request.method == 'GET':
