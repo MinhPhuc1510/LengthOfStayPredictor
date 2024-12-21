@@ -1,2 +1,2 @@
 ;Method;Accuracy;PCA__n_components;RandomForestClassifier__class_weight;RandomForestClassifier__criterion;RandomForestClassifier__max_depth;RandomForestClassifier__n_estimators
-0;MinMaxScaler>PCA>RandomForestClassifier;1.0;0.95;balanced;gini;10;100
+0;MinMaxScaler>PCA>RandomForestClassifier;0.5311463046757164;0.95;balanced;log_loss;10;100
